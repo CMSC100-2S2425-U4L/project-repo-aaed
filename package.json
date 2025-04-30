@@ -1,32 +1,13 @@
 {
-  "dependencies": {
-    "bcryptjs": "^3.0.2",
-    "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.14.0",
-    "react-router-dom": "^7.5.3"
-  },
-  "name": "project-repo-aaed",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://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@github.com/CMSC100-2S2425-U4L/project-repo-aaed.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/CMSC100-2S2425-U4L/project-repo-aaed/issues"
-  },
-  "homepage": "https://github.com/CMSC100-2S2425-U4L/project-repo-aaed#readme",
-  "description": "",
-  "devDependencies": {
-    "@types/node": "^22.15.3"
-  }
+    "name": "CMSC100-Project",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "server": "cd server && npm install && npm start",
+        "client": "cd client && npm install && npm run dev",
+        "dev": "concurrently \"npm run server\" \"npm run client\""
+    },
+    "dependencies": {
+        "concurrently": "^9.1.2"
+    }
 }
