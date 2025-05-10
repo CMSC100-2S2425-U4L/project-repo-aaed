@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 
 const orderSchema = new mongoose.Schema({
-    transactionId: { type: String, required: true, unique: true },
     items: [
         {
             productId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Product' },
