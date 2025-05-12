@@ -2,6 +2,80 @@ import './App.css';
 import logo from './assets/logo.png';
 import { FaUserCircle, FaShoppingCart } from 'react-icons/fa';
 import React, { useState } from 'react';
+import { Routes, Route, Link } from 'react-router-dom';
+import AdminShop from './AdminShop';
+import { NavLink } from 'react-router-dom';
+
+function Navbar({ handleProfileClick }) {
+  return (
+    <header className="navbar">
+      <img src={logo} alt="AgriMart Logo" className="logo" />
+      <nav>
+        {/* <ul className="nav-links">
+          <li><Link to="/" className="nav-item">Home</Link></li>
+          <li><Link to="/shop" className="nav-item">Shop</Link></li>
+          <li><Link to="/cart" className="nav-item">Cart</Link></li>
+          <li><Link to="/about" className="nav-item">About</Link></li>
+          <li onClick={handleProfileClick} style={{ cursor: 'pointer' }}>
+            <FaUserCircle size={45} />
+          </li>
+        </ul> */}
+
+        <ul className="nav-links">
+          <li>
+            <NavLink
+              to="/"
+              className={({ isActive }) => `nav-item ${isActive ? "active-tab" : ""}`}
+            >
+              Home
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/shop"
+              className={({ isActive }) => `nav-item ${isActive ? "active-tab" : ""}`}
+            >
+              Shop
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/cart"
+              className={({ isActive }) => `nav-item ${isActive ? "active-tab" : ""}`}
+            >
+              Cart
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/about"
+              className={({ isActive }) => `nav-item ${isActive ? "active-tab" : ""}`}
+            >
+              About
+            </NavLink>
+          </li>
+          <li onClick={handleProfileClick} style={{ cursor: 'pointer' }}>
+            <FaUserCircle size={45} />
+          </li>
+        </ul>
+      </nav>
+    </header>
+  );
+}
+
+function Home() {
+  return (
+    <main className="hero">
+      <div className="hero-content">
+        <img src={logo} alt="AgriMart Main" className="main-logo" />
+        <button className="shop-button">
+          <FaShoppingCart className="shop-icon" />
+          <span> Start Shopping</span>
+        </button>
+      </div>
+    </main>
+  );
+}
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -11,36 +85,19 @@ function App() {
     if (!isLoggedIn) {
       setShowModal(true);
     } else {
-      // Show profile or menu if needed
+      // Logic for showing profile info if logged in
     }
   };
 
   return (
     <div className="app-container">
-      <header className="navbar">
-        <img src={logo} alt="AgriMart Logo" className="logo" />
-        <nav>
-          <ul className="nav-links">
-            <li className="active">Home</li>
-            <li>Shop</li>
-            <li>Cart</li>
-            <li>About</li>
-            <li onClick={handleProfileClick} style={{ cursor: 'pointer' }}>
-              <FaUserCircle size={45} />
-            </li>
-          </ul>
-        </nav>
-      </header>
+      <Navbar handleProfileClick={handleProfileClick} />
 
-      <main className="hero">
-        <div className="hero-content">
-          <img src={logo} alt="AgriMart Main" className="main-logo" />
-          <button className="shop-button">
-            <FaShoppingCart className="shop-icon" />
-            <span> Start Shopping</span>
-          </button>
-        </div>
-      </main>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/shop" element={<AdminShop />} />
+        {/* Add more routes like <Route path="/cart" ...> etc. */}
+      </Routes>
 
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
@@ -57,7 +114,6 @@ function App() {
                 Don’t have an account? <span className="create-link">Create one</span>
               </div>
               <button>Continue</button>
-              <p style={{ fontSize: '0.8rem', marginTop: '8px' }}>Don't have an account? Sign up here.</p>
             </form>
           </div>
         </div>
