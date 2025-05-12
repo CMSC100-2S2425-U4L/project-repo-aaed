@@ -18,7 +18,7 @@ body, html, #root {
   justify-content: space-between;
   align-items: center;
   padding: 0.20rem 2rem;
-  background-color: white;
+  background-color: #F0F2F1;
   border-bottom: 1px solid #ccc;
 }
 
@@ -84,7 +84,7 @@ body, html, #root {
 }
 
 .shop-button {
-  background-color: white;
+  background-color: #F0F2F1;
   border: none;
   /* display: flex; */
   align-items: center;
@@ -100,4 +100,75 @@ body, html, #root {
 
 .shop-button:hover {
   background-color: #f0fdf4;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 40px;
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Sign In Heading */
+.modal-heading {
+  font-size: 50px;
+  color: #47532B;
+  margin-bottom: 2rem;
+}
+
+/* Input Fields */
+.modal-content input {
+  width: 484px;
+  height: 60px;
+  font-size: 20px;
+  background-color: #D9D9D9;
+  border: none;
+  border-radius: 28px;
+  padding: 0 1rem;
+  margin: 10px 0;
+  box-sizing: border-box;
+}
+
+/* Continue Button */
+.modal-content button {
+  width: 217px;
+  height: 61px;
+  background-color: #EEBA14;
+  color: #47532B;
+  font-size: 24px;
+  font-weight: 600;
+  border: none;
+  border-radius: 28px;
+  cursor: pointer;
+  margin-top: 1.5rem;
+}
+
+/* Sign Up Prompt */
+.signup-text {
+  margin-top: 1rem;
+  font-size: 18px;
+  color: #828D33;
+}
+
+.signup-text .create-link {
+  color: #47532B;
+  font-weight: bold;
+  text-decoration: underline;
+  cursor: pointer;
 }
