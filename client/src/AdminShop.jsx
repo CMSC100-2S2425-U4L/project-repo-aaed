@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './AdminShop.css'; // You'll style sidebar, cards, modal here
+import ProductDetail from './ProductDetail'; // Adjust path if needed
+
 
 function AdminShop() {
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -13,7 +15,7 @@ function AdminShop() {
       type: 'Poultry',
       stock: 13579,
       description: 'Farm fresh eggs',
-      image: '/path-to-eggs.jpg'
+      image: '/src/assets/images/eggs.jpg'
     },
     // Add more products
   ];
@@ -37,6 +39,8 @@ function AdminShop() {
         </nav>
       </aside>
 
+      
+
       <main className="product-panel">
         <button className="add-product-btn" onClick={openModal}>+ Add a Product</button>
 
@@ -52,15 +56,11 @@ function AdminShop() {
         </div>
       </main>
 
-      {selectedProduct && (
-        <div className="product-detail-panel">
-          <h2>{selectedProduct.name}</h2>
-          <p>{selectedProduct.description}</p>
-          <p>Type: {selectedProduct.type}</p>
-          <p>Stock: {selectedProduct.stock}</p>
-          <button onClick={openModal}>Edit</button>
-        </div>
-      )}
+        <ProductDetail
+            product={selectedProduct}
+            onClose={() => setSelectedProduct(null)}
+            onEdit={openModal}
+        />
 
       {isModalOpen && (
         <div className="modal-overlay" onClick={closeModal}>
@@ -78,7 +78,9 @@ function AdminShop() {
           </div>
         </div>
       )}
+      
     </div>
+    
   );
 }
 

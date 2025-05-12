@@ -5,18 +5,40 @@
   --text-dark: #333333;
   --sidebar-bg: #f4f4f4;
   --modal-overlay: rgba(0, 0, 0, 0.4);
+  --text-green: #47532B;
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
 }
 
 body {
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: var(--background-light);
+  background-image: url('/src/assets/background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  width: 100%;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--text-green);
 }
 
 .admin-shop-container {
+  background-image: url('/src/assets/background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   display: flex;
   height: 100vh;
 }
+
 
 /* Sidebar */
 .sidebar {
@@ -138,15 +160,13 @@ body {
   margin-top: 0;
 }
 
-.product-detail-panel button {
-  align-self: start;
-  padding: 8px 16px;
+.product-detail-panel {
+  width: 400px;
+  max-width: 90%;
+  height: auto;
+  max-height: 90%;
+  overflow-y: auto;
   border-radius: 20px;
-  background: var(--primary-yellow);
-  color: white;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
 }
 
 /* Modal */
