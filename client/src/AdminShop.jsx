@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './AdminShop.css'; // You'll style sidebar, cards, modal here
 import ProductDetail from './ProductDetail'; // Adjust path if needed
+import ProductFormModal from './ProductFormModal'; // Adjust path as needed
+
 
 
 function AdminShop() {
@@ -56,28 +58,31 @@ function AdminShop() {
         </div>
       </main>
 
-        <ProductDetail
-            product={selectedProduct}
-            onClose={() => setSelectedProduct(null)}
-            onEdit={openModal}
-        />
+      <ProductDetail
+        product={selectedProduct}
+        onClose={() => setSelectedProduct(null)}
+        onEdit={openModal}
+      />
+      
 
       {isModalOpen && (
-        <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h2>Add / Edit Product</h2>
-            <input placeholder="Product Name" />
-            <textarea placeholder="Add your description here" />
-            <div>
-              <button>Crop</button>
-              <button>Poultry</button>
-            </div>
-            <input type="number" placeholder="Price" />
-            <input type="number" placeholder="Quantity" />
-            <button onClick={closeModal}>Save</button>
-          </div>
-        </div>
+        <ProductFormModal
+          mode={selectedProduct ? 'edit' : 'add'}
+          product={selectedProduct}
+          onClose={() => {
+            setIsModalOpen(false);
+            setSelectedProduct(null);
+          }}
+          onSave={(formData) => {
+            if (selectedProduct) {
+              // update logic
+            } else {
+              // add logic
+            }
+          }}
+        />
       )}
+
       
     </div>
     

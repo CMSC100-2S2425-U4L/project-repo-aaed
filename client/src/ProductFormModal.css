@@ -1,0 +1,141 @@
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal Content */
+/* Modal Content */
+.modal-content {
+  background: var(--card-white);
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  width: 80%; /* Increased width for more space */
+  max-width: 800px; /* Larger max width */
+  height: auto;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left; /* Align text to the left for more space efficiency */
+  overflow-y: auto;
+  margin: 0 auto; /* Center modal */
+}
+
+/* Image Upload */
+.image-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+/* Image Placeholder */
+.image-placeholder {
+  width: 220px;
+  height: 220px;
+  background-color: #ccc;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #666;
+  font-weight: bold;
+  position: relative;
+  margin-bottom: 1rem; /* Space between image placeholder and inputs */
+}
+
+/* Image Preview */
+.image-preview {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  margin-bottom: 1rem;
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+/* Edit Photo Button */
+.edit-photo {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: #fff;
+  border-radius: 50%;
+  padding: 8px;
+  cursor: pointer;
+  border: 1px solid #aaa;
+}
+
+/* Input Fields */
+.input-field {
+  width: 100%;
+  padding: 1rem;
+  margin: 1rem 1;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  font-size: 1rem;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #EEBA14;
+}
+
+/* Submit Button */
+.submit-button {
+  padding: 0.8rem 1.2rem;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  background-color: #EEBA14;
+  color: #47532B;
+  margin-top: 1.5rem; /* Added space between inputs and button */
+}
+
+.submit-button:hover {
+  background-color: #facc15;
+}
+
+/* Modal Heading */
+.modal-content h2 {
+  font-size: 36px;
+  margin-bottom: 1rem;
+}
+
+/* Adjusting Textareas */
+textarea {
+  width: 100%;
+  height: 120px; /* Set a height for the textarea */
+  padding: 1rem;
+  margin: 0.8rem 0;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  font-size: 1rem;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #EEBA14;
+}

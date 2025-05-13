@@ -1,21 +1,31 @@
 import React from 'react';
-import './AdminShop.css'; // Reuse your existing styles
+import './AdminShop.css';
+import { FaArrowLeft } from 'react-icons/fa';
 
 function ProductDetail({ product, onClose, onEdit }) {
   if (!product) return null;
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="product-detail-panel" onClick={(e) => e.stopPropagation()}>
-        <button onClick={onClose} style={{ alignSelf: 'flex-end', marginBottom: '1rem' }}>
-          ✕
+    <div className="product-detail-panel">
+      <img
+        src={product.image}
+        alt={product.name}
+        className="product-detail-image"
+      />
+      <h2>{product.name}</h2>
+      <p className="product-description">{product.description}</p>
+      <p><strong>Price:</strong> Php {product.price.toFixed(2)}</p>
+      <p><strong>Stock:</strong> {product.stock}</p>
+      <p><strong>Type:</strong> {product.type}</p>
+
+      <div className="detail-actions">
+        <button className="back-button" onClick={onClose}>
+          <FaArrowLeft style={{ marginRight: '8px' }} />
+          Back
         </button>
-        <h2>{product.name}</h2>
-        <p>{product.description}</p>
-        <p>Type: {product.type}</p>
-        <p>Stock: {product.stock}</p>
-        <p>Php {product.price.toFixed(2)}</p>
-        <button onClick={onEdit}>Edit</button>
+        <button className="edit-button" onClick={onEdit}>
+          Edit Product
+        </button>
       </div>
     </div>
   );
