@@ -5,6 +5,11 @@ import React, { useState } from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 import AdminShop from './AdminShop';
 import { NavLink } from 'react-router-dom';
+import Users from './Users';
+import Orders from './Orders';
+import Sales from './Sales';
+import Dashboard from './Dashboard';
+
 
 function Navbar({ handleProfileClick }) {
   return (
@@ -96,6 +101,12 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/shop" element={<AdminShop />} />
+        <Route path="/products" element={<AdminShop />} />
+        <Route path="/users" element={<Users />} />
+        <Route path="/orders" element={<Orders />} />
+        <Route path="/sales" element={<Sales />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+
         {/* Add more routes like <Route path="/cart" ...> etc. */}
       </Routes>
 
