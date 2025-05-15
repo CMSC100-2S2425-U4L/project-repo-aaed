@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import './AdminShop.css';
-import ProductDetail from './ProductDetail';
-import ProductFormModal from './ProductFormModal';
-import axios from 'axios';
+import React, { useState } from 'react';
+import './AdminShop.css'; // You'll style sidebar, cards, modal here
+import ProductDetail from './ProductDetail'; // Adjust path if needed
+import ProductFormModal from './ProductFormModal'; // Adjust path as needed
+import Sidebar from './Sidebar';
 
-const API_URL = import.meta.env.VITE_API_URL;
+
 
 function AdminShop() {
   const [products, setProducts] = useState([]);
@@ -39,19 +39,7 @@ function AdminShop() {
 
   return (
     <div className="admin-shop-container">
-      <aside className="sidebar">
-        <h2>AgriMart</h2>
-        <nav>
-          <ul>
-            <li>Dashboard</li>
-            <li className="active">Products</li>
-            <li>Users</li>
-            <li>Orders</li>
-            <li>Sales</li>
-          </ul>
-        </nav>
-      </aside>
-
+      <Sidebar />
       <main className="product-panel">
         <button className="add-product-btn" onClick={openModal}>+ Add a Product</button>
 

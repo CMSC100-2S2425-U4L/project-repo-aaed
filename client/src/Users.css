@@ -1,0 +1,76 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden; 
+}
+
+body {
+  background-image: url('/src/assets/background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: var(--text-green);
+}
+
+.admin-shop-container, .user-panel {
+  min-height: 100vh; /* Ensure content stretches to full height */
+  overflow-y: auto; /* Allow scrolling */
+  position: relative; /* Allow z-index stacking */
+}
+
+.sidebar-fixed {
+  position: fixed;
+  top: 90px; /* Adjust based on navbar height */
+  left: 0;
+  width: 220px;
+  height: calc(100vh - 90px);
+  z-index: 1000;
+}
+
+.product-panel, .user-panel {
+  margin-left: 240px; /* Adjust for sidebar */
+  padding: 2rem;
+  overflow-y: auto; /* Scrollable content */
+}
+
+.admin-shop-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.user-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 20px;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  background-color: #f7f7f7;
+  padding: 1rem;
+  border-radius: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.user-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 1rem;
+}
+
+.user-info h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.user-info p {
+  margin: 2px 0;
+  color: #666;
+}
