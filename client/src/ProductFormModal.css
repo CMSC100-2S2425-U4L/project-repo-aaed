@@ -19,17 +19,21 @@
   padding: 2rem;
   border-radius: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  width: 80%; /* Increased width for more space */
-  max-width: 800px; /* Larger max width */
+  width: 80%;
+  /* Increased width for more space */
+  max-width: 800px;
+  /* Larger max width */
   height: auto;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  text-align: left; /* Align text to the left for more space efficiency */
+  text-align: left;
+  /* Align text to the left for more space efficiency */
   overflow-y: auto;
-  margin: 0 auto; /* Center modal */
+  margin: 0 auto;
+  /* Center modal */
 }
 
 /* Image Upload */
@@ -56,7 +60,8 @@
   color: #666;
   font-weight: bold;
   position: relative;
-  margin-bottom: 1rem; /* Space between image placeholder and inputs */
+  margin-bottom: 1rem;
+  /* Space between image placeholder and inputs */
 }
 
 /* Image Preview */
@@ -111,7 +116,8 @@
   font-weight: bold;
   background-color: #EEBA14;
   color: #47532B;
-  margin-top: 1.5rem; /* Added space between inputs and button */
+  margin-top: 1.5rem;
+  /* Added space between inputs and button */
 }
 
 .submit-button:hover {
@@ -127,7 +133,8 @@
 /* Adjusting Textareas */
 textarea {
   width: 100%;
-  height: 120px; /* Set a height for the textarea */
+  height: 120px;
+  /* Set a height for the textarea */
   padding: 1rem;
   margin: 0.8rem 0;
   border: 1px solid #ccc;
@@ -138,4 +145,65 @@ textarea {
 textarea:focus {
   outline: none;
   border-color: #EEBA14;
+}
+
+
+
+.product-type-selection {
+  margin: 10px 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Center horizontally */
+  justify-content: center;
+  /* Center vertically if needed */
+}
+
+.type-label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.radio-group {
+  display: flex;
+  gap: 24px;
+  margin-top: 0.5rem;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #47532B;
+  font-weight: 500;
+  gap: 0.4rem;
+}
+
+.radio-label input[type="radio"] {
+  accent-color: #EEBA14;
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  margin-left: 0;
+  /* Remove transform scaling for default size */
+}
+
+.form-fields-container {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  margin: 0 auto;
+}
+
+/* Ensure input and textarea fields fill the container width */
+.input-field,
+.form-fields-container textarea {
+  width: 100%;
+  box-sizing: border-box;
 }
