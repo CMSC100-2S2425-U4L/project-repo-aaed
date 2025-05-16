@@ -16,7 +16,7 @@ function Sidebar() {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/products" className={({ isActive }) => `sidebar-link ${isActive ? "active" : ""}`}>
+            <NavLink to="/shop" className={({ isActive }) => `sidebar-link ${isActive ? "active" : ""}`}>
               <FaBox className="sidebar-icon" />
               Products
             </NavLink>

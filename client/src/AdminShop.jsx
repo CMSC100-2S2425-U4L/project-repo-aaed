@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
 import './AdminShop.css'; // You'll style sidebar, cards, modal here
 import ProductDetail from './ProductDetail'; // Adjust path if needed
 import ProductFormModal from './ProductFormModal'; // Adjust path as needed
 import Sidebar from './Sidebar';
+import axios from 'axios';
+const API_URL = 'http://localhost:3000';
+import React, { useState, useEffect } from 'react';
 
 
 
@@ -14,8 +17,11 @@ function AdminShop() {
   // Fetch products from backend API using axios
   const fetchProducts = () => {
     axios.get(`${API_URL}/product`)
-      .then(res => setProducts(res.data))
-      .catch(err => console.error('Failed to fetch products:', err));
+    .then(res => {
+      console.log('API response:', res.data); // <--- Important
+      setProducts(res.data);
+  })
+
   };
 
   useEffect(() => {
