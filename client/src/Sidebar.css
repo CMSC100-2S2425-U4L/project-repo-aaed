@@ -96,18 +96,24 @@
   flex-direction: column;
 }
 
-.sort-options {
+.sort-options, .view-options{
   padding-left: 32px;
   margin-top: 8px;
 }
 
-.sort-label {
+.sort-label, .view-label {
   font-weight: bold;
   margin-bottom: 5px;
   font-size: 0.9rem;
 }
 
-.sort-row {
+.view-column {
+  display: flex;
+  gap: 5px;
+  flex-direction: column;
+}
+
+.sort-row{
   display: flex;
   gap: 6px;
   margin-bottom: 5px;

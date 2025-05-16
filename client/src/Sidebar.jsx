@@ -9,6 +9,16 @@ function Sidebar({ onSortChange }) {
   const [isProductExpanded, setIsProductExpanded] = useState(false);
   const [selectedSort, setSelectedSort] = useState({ key: '', direction: '' });
 
+  const isSalesActive = location.pathname === '/sales';
+  const [isSalesExpanded, setIsSalesExpanded] = useState(false);
+  const [selectedSalesView, setSelectedSalesView] = useState('');
+
+  useEffect(() => {
+    if (isSalesActive) {
+      setIsSalesExpanded(true); // auto-expand on route change to /sales
+    }
+  }, [isSalesActive])
+
   useEffect(() => {
     if (isShopActive) {
       setIsProductExpanded(true); // auto-expand on route change to /shop
@@ -19,6 +29,12 @@ function Sidebar({ onSortChange }) {
     setSelectedSort({ key, direction });
     onSortChange({ key, direction });
   };
+
+  const handleSalesView = (view) => {
+    setSelectedSalesView(view);
+    onSortChange({ key: 'salesView', value: view });
+  };
+
 
   return (
     <div className="sidebar-fixed">
@@ -117,9 +133,40 @@ function Sidebar({ onSortChange }) {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/sales" className={({ isActive }) => `sidebar-link ${isActive ? "active" : ""}`}>
-              <FaChartBar className="sidebar-icon" /> Sales
-            </NavLink>
+            <div 
+              className={`sidebar-link ${isSalesActive ? "active" : ""}`}
+              onClick={() => {
+                setIsSalesExpanded(prev => !prev);
+              }}
+              style={{ cursor: 'pointer' }}
+            > 
+              <FaBox className="sidebar-icon" />
+              <NavLink to="/sales" className={({ isActive }) => `sidebar-link ${isActive ? "active" : ""}`}>Sales</NavLink>
+            </div>
+            {isSalesExpanded && (
+              <div className="view-options">
+                <p className="view-label">View by:</p>
+                <div className="view-column">
+                  {['Weekly', 'Monthly', 'Annual'].map((view) => (
+                    <button
+                      key={view}
+                      onClick={() => handleSalesView(view.toLowerCase())}
+                      style={{
+                        backgroundColor: selectedSalesView === view.toLowerCase() ? '#47532B' : '#f5f5f5',
+                        color: selectedSalesView === view.toLowerCase() ? 'white' : 'black',
+                        padding: '6px 10px',
+                        borderRadius: '4px',
+                        border: '1px solid #ccc',
+                        fontSize: '0.85rem',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {view}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </li>
         </ul>
       </div>
