@@ -13,51 +13,48 @@ function AdminShop() {
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [sortOption, setSortOption] = useState({ key: '', direction: '' });
 
-  // Fetch products from backend API using axios
   const fetchProducts = () => {
     axios.get(`${API_URL}/product`)
-    .then(res => {
-      console.log('API response:', res.data); // <--- Important
-      setProducts(res.data);
-  })
-
+      .then(res => {
+        setProducts(res.data);
+      });
   };
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
-  const openProductDetail = (product) => setSelectedProduct(product);
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const sortedProducts = [...products].sort((a, b) => {
+    const { key, direction } = sortOption;
+    if (!key || !direction) return 0;
 
-  const handleDeleteProduct = async (product) => {
-    try {
-      await axios.delete(`${API_URL}/product/delete/${product._id}`);
-      setProducts(products.filter(p => p._id !== product._id));
-      setSelectedProduct(null);
-    } catch (err) {
-      alert('Failed to delete product.');
-      console.error(err);
-    }
-  };
+    let valA = a[key];
+    let valB = b[key];
+
+    // If sorting by name/type, make sure it's case-insensitive
+    if (typeof valA === 'string') valA = valA.toLowerCase();
+    if (typeof valB === 'string') valB = valB.toLowerCase();
+
+    if (valA < valB) return direction === 'asc' ? -1 : 1;
+    if (valA > valB) return direction === 'asc' ? 1 : -1;
+    return 0;
+  });
 
   return (
     <div className="admin-shop-container">
-      <Sidebar />
+      <Sidebar onSortChange={setSortOption} />
       <main className="product-panel">
-        <button className="add-product-btn" onClick={openModal}>+ Add a Product</button>
+        <button className="add-product-btn" onClick={() => setIsModalOpen(true)}>+ Add a Product</button>
 
         <div className="product-grid">
-          {products.map(product => (
-            <div key={product._id} className="product-card" onClick={() => openProductDetail(product)}>
+          {sortedProducts.map(product => (
+            <div key={product._id} className="product-card" onClick={() => setSelectedProduct(product)}>
               <img
-                src={
-                  product.productImage
-                    ? `${API_URL}/uploads/${product.productImage}`
-                    : '/src/assets/images/placeholder.jpg'
-                }
+                src={product.productImage
+                  ? `${API_URL}/uploads/${product.productImage}`
+                  : '/src/assets/images/placeholder.jpg'}
                 alt={product.productName}
               />
               <h3>{product.productName}</h3>
@@ -71,10 +68,13 @@ function AdminShop() {
       <ProductDetail
         product={selectedProduct}
         onClose={() => setSelectedProduct(null)}
-        onEdit={openModal}
-        onDelete={handleDeleteProduct}
+        onEdit={() => setIsModalOpen(true)}
+        onDelete={async () => {
+          await axios.delete(`${API_URL}/product/delete/${selectedProduct._id}`);
+          setProducts(products.filter(p => p._id !== selectedProduct._id));
+          setSelectedProduct(null);
+        }}
       />
-
 
       {isModalOpen && (
         <ProductFormModal
@@ -91,11 +91,9 @@ function AdminShop() {
           }}
         />
       )}
-
-
     </div>
-
   );
 }
+
 
 export default AdminShop;

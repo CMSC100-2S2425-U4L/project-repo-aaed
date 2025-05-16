@@ -84,3 +84,40 @@
   display: flex;
   flex-direction: column;
 }
+
+.sort-options {
+  padding-left: 32px;
+  margin-top: 8px;
+}
+
+.sort-label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+}
+
+.sort-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 5px;
+}
+
+.sort-row button {
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  background-color: #828D33;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.sort-row button:hover {
+  background-color: #EEBA14;
+}
+
+.sidebar-link-text {
+  display: inline-block;
+  margin-left: 8px;
+  text-decoration: none;
+  color: inherit;
+}
