@@ -7,6 +7,7 @@
   const API_URL = 'http://localhost:3000';
   import React, { useState, useEffect } from 'react';
   import CustomerProductDetail from './CustomerProductDetail'; 
+  import { useCart } from './CartContext';
 
 
 
@@ -19,6 +20,7 @@
       1: 'Crop',
       2: 'Poultry',
     };
+    const { addToCart } = useCart();
 
     const fetchProducts = () => {
       axios.get(`${API_URL}/product`)
@@ -83,10 +85,21 @@
                 <button
                     className="add-to-cart-btn"
                     onClick={(e) => {
-                    e.stopPropagation();
-                    console.log(`Add to cart: ${product.productName}`);
+                        e.stopPropagation();
+                        const normalizedProduct = {
+                            id: product._id,
+                            name: product.productName,
+                            price: product.productPrice,
+                            imageUrl: product.productImage
+                            ? `${API_URL}/uploads/${product.productImage}`
+                            : '/src/assets/images/placeholder.jpg',
+                            quantity: 1,
+                            type: PRODUCT_TYPE_MAP[product.productType] || 'Unknown',
+                        };
+                        addToCart(normalizedProduct, 1);
+                        alert(`Added 1 x ${product.productName} to cart`);
                     }}
-                >
+                    >
                     Add to Cart
                 </button>
                 </div>

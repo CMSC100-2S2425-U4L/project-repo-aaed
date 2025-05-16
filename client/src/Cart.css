@@ -1,0 +1,157 @@
+.cart-content {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+  overflow-y: auto;
+}
+
+
+.order-details {
+  flex: 3;
+  background-color: #f9f9f9;
+  border-radius: 1rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.order-card {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  gap: 1rem;
+}
+
+.product-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
+.product-info {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.product-type {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.quantity-controls {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.quantity-controls button {
+  padding: 0.25rem 0.5rem;
+  font-size: 1rem;
+  background-color: #e0e0e0;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.product-price {
+  flex: 1.5;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.product-price input[type="checkbox"] {
+  align-self: flex-start;
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+.price-breakdown {
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.price-total {
+  font-weight: bold;
+}
+
+.product-price button {
+  padding: 0.25rem 0.5rem;
+  background-color: #ff6b6b;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.cart-summary {
+  flex: 1;
+  background-color: #fdfdfd;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  min-height: calc(100vh - 120px); /* ✅ safer spacing below navbar */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-y: auto; /* ✅ scroll if content overflows */
+}
+
+
+.cart-summary h3 {
+  margin-bottom: 0.5rem;
+}
+
+.cart-summary p {
+  margin: 0.25rem 0;
+}
+
+.checkout-section {
+  margin-top: auto;
+}
+
+.total {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.pill {
+  background-color: #fdd835;
+  color: black;
+  padding: 0.25rem 1rem;
+  border-radius: 999px;
+  font-weight: bold;
+  display: inline-block;
+}
+
+.checkout-button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #4caf50;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.checkout-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.checkout-button:not(:disabled):hover {
+  background-color: #43a047;
+}
