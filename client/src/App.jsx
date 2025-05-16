@@ -9,7 +9,7 @@ import Users from './Users';
 import Orders from './Orders';
 import Sales from './Sales';
 import Dashboard from './Dashboard';
-
+import SignUp from './SignUp';
 
 function Navbar({ handleProfileClick }) {
   return (
@@ -106,6 +106,7 @@ function App() {
         <Route path="/orders" element={<Orders />} />
         <Route path="/sales" element={<Sales />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/signup" element={<SignUp />} />
 
         {/* Add more routes like <Route path="/cart" ...> etc. */}
       </Routes>
@@ -122,7 +123,14 @@ function App() {
               <input type="email" placeholder="Email" required /><br />
               <input type="password" placeholder="Password" required /><br />
               <div className="signup-text">
-                Don’t have an account? <span className="create-link">Create one</span>
+                Don’t have an account?{' '}
+                <Link
+                  to="/signup"
+                  className="create-link"
+                  onClick={() => setShowModal(false)}
+                >
+                  Create one
+                </Link>
               </div>
               <button>Continue</button>
             </form>
