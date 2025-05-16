@@ -1,116 +1,111 @@
-  // import React, { useState } from 'react';
-  import './AdminShop.css'; // You'll style sidebar, cards, modal here
-  import ProductDetail from './ProductDetail'; // Adjust path if needed
-  import ProductFormModal from './ProductFormModal'; // Adjust path as needed
-  import Sidebar from './Sidebar';
-  import axios from 'axios';
-  const API_URL = 'http://localhost:3000';
-  import React, { useState, useEffect } from 'react';
+// import React, { useState } from 'react';
+import './AdminShop.css'; // You'll style sidebar, cards, modal here
+import ProductDetail from './ProductDetail'; // Adjust path if needed
+import ProductFormModal from './ProductFormModal'; // Adjust path as needed
+import Sidebar from './Sidebar';
+import axios from 'axios';
+const API_URL = import.meta.env.VITE_API_URL;
+import React, { useState, useEffect } from 'react';
 
 
 
-  function AdminShop() {
-    const [products, setProducts] = useState([]);
-    const [selectedProduct, setSelectedProduct] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [sortOption, setSortOption] = useState({ key: '', direction: '' });
-    const PRODUCT_TYPE_MAP = {
-      1: 'Crop',
-      2: 'Poultry',
-    };
+function AdminShop() {
+  const [products, setProducts] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [sortOption, setSortOption] = useState({ key: '', direction: '' });
+  const PRODUCT_TYPE_MAP = {
+    1: 'Crop',
+    2: 'Poultry',
+  };
 
-    const fetchProducts = () => {
-      axios.get(`${API_URL}/product`)
-        .then(res => {
-          setProducts(res.data);
-        });
-    };
+  const fetchProducts = async (sort = sortOption) => {
+    const params = {};
+    if (sort.key && sort.direction) {
+      params.sortKey = sort.key;
+      params.sortDirection = sort.direction;
+    }
+    if (sort.key === 'productType' && sort.value) {
+      params.productType = Object.keys(PRODUCT_TYPE_MAP).find(
+        k => PRODUCT_TYPE_MAP[k] === sort.value
+      );
+    }
+    const res = await axios.get(`${API_URL}/product/`, { params });
+    setProducts(res.data);
+  };
 
-    useEffect(() => {
-      fetchProducts();
-    }, []);
+  useEffect(() => {
+    fetchProducts();
+    // eslint-disable-next-line
+  }, []);
 
-    const sortedProducts = (() => {
-      const { key, direction, value } = sortOption;
+  useEffect(() => {
+    fetchProducts(sortOption);
+    // eslint-disable-next-line
+  }, [sortOption]);
 
-      if (key === 'productType' && value) {
-        // Instead of matching string directly, find key by value and filter by number
-        const typeKey = Object.keys(PRODUCT_TYPE_MAP).find(k => PRODUCT_TYPE_MAP[k] === value);
-        return products.filter(product => String(product.productType) === String(typeKey));
-      }
+  // Ensure fetchProducts is called after closing the modal (add/edit)
+  const handleSave = () => {
+    fetchProducts(sortOption);
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+  };
 
-      if (key && direction) {
-        return [...products].sort((a, b) => {
-          let valA = a[key];
-          let valB = b[key];
+  // Ensure fetchProducts is called after deleting a product
+  const handleDelete = async () => {
+    await axios.delete(`${API_URL}/product/delete/${selectedProduct._id}`);
+    fetchProducts(sortOption);
+    setSelectedProduct(null);
+  };
 
-          if (typeof valA === 'string') valA = valA.toLowerCase();
-          if (typeof valB === 'string') valB = valB.toLowerCase();
+  return (
+    <div className="admin-shop-container">
+      <Sidebar onSortChange={setSortOption} />
+      {console.log(sortOption)}
+      <main className="product-panel">
+        <button className="add-product-btn" onClick={() => setIsModalOpen(true)}>+ Add a Product</button>
 
-          if (valA < valB) return direction === 'asc' ? -1 : 1;
-          if (valA > valB) return direction === 'asc' ? 1 : -1;
-          return 0;
-        });
-      }
+        <div className="product-grid">
+          {products.map(product => (
+            <div key={product._id} className="product-card" onClick={() => setSelectedProduct(product)}>
+              <img
+                src={product.productImage
+                  ? `${API_URL}/uploads/${product.productImage}`
+                  : '/src/assets/images/placeholder.jpg'}
+                alt={product.productName}
+              />
+              <h3>{product.productName}</h3>
+              <p>Php {product.productPrice?.toFixed(2)}</p>
+              <p>Stock: {product.productQuantity}</p>
+              <span className="product-type-badge">
+                {PRODUCT_TYPE_MAP[product.productType] || 'Unknown'}
+              </span>
+            </div>
+          ))}
+        </div>
+      </main>
 
-      return products;
-    })();
+      <ProductDetail
+        product={selectedProduct}
+        onClose={() => setSelectedProduct(null)}
+        onEdit={() => setIsModalOpen(true)}
+        onDelete={handleDelete}
+      />
 
-    return (
-      <div className="admin-shop-container">
-        <Sidebar onSortChange={setSortOption} />
-        <main className="product-panel">
-          <button className="add-product-btn" onClick={() => setIsModalOpen(true)}>+ Add a Product</button>
-
-          <div className="product-grid">
-            {sortedProducts.map(product => (
-              <div key={product._id} className="product-card" onClick={() => setSelectedProduct(product)}>
-                <img
-                  src={product.productImage
-                    ? `${API_URL}/uploads/${product.productImage}`
-                    : '/src/assets/images/placeholder.jpg'}
-                  alt={product.productName}
-                />
-                <h3>{product.productName}</h3>
-                <p>Php {product.productPrice?.toFixed(2)}</p>
-                <p>Stock: {product.productQuantity}</p>
-                <span className="product-type-badge">
-                  {PRODUCT_TYPE_MAP[product.productType] || 'Unknown'}
-                </span>
-              </div>
-            ))}
-          </div>
-        </main>
-
-        <ProductDetail
+      {isModalOpen && (
+        <ProductFormModal
+          mode={selectedProduct ? 'edit' : 'add'}
           product={selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-          onEdit={() => setIsModalOpen(true)}
-          onDelete={async () => {
-            await axios.delete(`${API_URL}/product/delete/${selectedProduct._id}`);
-            setProducts(products.filter(p => p._id !== selectedProduct._id));
+          onClose={() => {
+            setIsModalOpen(false);
             setSelectedProduct(null);
           }}
+          onSave={handleSave}
         />
-
-        {isModalOpen && (
-          <ProductFormModal
-            mode={selectedProduct ? 'edit' : 'add'}
-            product={selectedProduct}
-            onClose={() => {
-              setIsModalOpen(false);
-              setSelectedProduct(null);
-            }}
-            onSave={() => {
-              fetchProducts();
-              setIsModalOpen(false);
-              setSelectedProduct(null);
-            }}
-          />
-        )}
-      </div>
-    );
-  }
+      )}
+    </div>
+  );
+}
 
 
-  export default AdminShop;
+export default AdminShop;
