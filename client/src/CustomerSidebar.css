@@ -1,0 +1,134 @@
+/* Container fixed to the screen */
+.sidebar-fixed {
+  position: fixed;
+  top: 99px; /* height of navbar */
+  left: 20px;
+  height: calc(100vh - 90px);
+  z-index: 1000;
+}
+
+/* Actual box with white background */
+.sidebar-box {
+  background-color: white;
+  /* border-radius: 20px; */
+  padding: 25px 20px;
+  width: 220px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Agrimart title */
+.sidebar-title {
+  color: #EEBA14;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* Links */
+.sidebar-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Link style */
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  color: #47532B;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 10px 15px;
+  border-radius: 999px;
+  transition: background-color 0.2s ease;
+}
+
+.sidebar-link-text {
+  color: inherit !important;
+}
+
+.sidebar-link:hover .sidebar-link-text {
+  color: #47532B !important;
+}
+
+
+/* Hover */
+.sidebar-link:hover {
+  background-color: #f5e58c33;
+  color: #47532B  ;
+}
+
+/* Active */
+.sidebar-link.active {
+  background-color: #EEBA14;
+  font-weight: bold;
+  color: #47532B;
+}
+
+/* Icon */
+.sidebar-icon {
+  margin-right: 10px;
+}
+
+.sidebar-fixed {
+  position: fixed;
+  top: 90px; /* below navbar */
+  left: 20px;
+  height: calc(100vh - 90px);
+  z-index: 1000;
+}
+
+.sidebar-box {
+  background-color: white;
+  /* border-radius: 20px; */
+  padding: 25px 20px;
+  width: 220px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.sort-options {
+  padding-left: 32px;
+  margin-top: 8px;
+}
+
+.sort-label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+}
+
+.sort-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 5px;
+}
+
+.sort-row button {
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  background-color: #828D33;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.sort-row button:hover {
+  background-color: #EEBA14;
+}
+
+.sidebar-link-text {
+  display: inline-block;
+  margin-left: 8px;
+  text-decoration: none;
+  color: inherit;
+}

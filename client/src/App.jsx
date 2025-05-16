@@ -10,6 +10,8 @@ import Orders from './Orders';
 import Sales from './Sales';
 import Dashboard from './Dashboard';
 import SignUp from './SignUp';
+import CustomerShop from './CustomerShop';
+import CustomerOrder from './CustomerOrder';
 
 function Navbar({ handleProfileClick }) {
   return (
@@ -75,7 +77,8 @@ function Home() {
         <img src={logo} alt="AgriMart Main" className="main-logo" />
         <button className="shop-button">
           <FaShoppingCart className="shop-icon" />
-          <span> Start Shopping</span>
+          <span> <Link to="/customershop">Start Shopping</Link>
+          </span>
         </button>
       </div>
     </main>
@@ -107,7 +110,8 @@ function App() {
         <Route path="/sales" element={<Sales />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/signup" element={<SignUp />} />
-
+        <Route path="/customershop" element={<CustomerShop />} />
+        <Route path="/customerorder" element={<CustomerOrder />} />
         {/* Add more routes like <Route path="/cart" ...> etc. */}
       </Routes>
 
