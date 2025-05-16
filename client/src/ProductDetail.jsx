@@ -3,6 +3,10 @@ import './AdminShop.css';
 import { FaArrowLeft } from 'react-icons/fa';
 
 const API_URL = import.meta.env.VITE_API_URL;
+const PRODUCT_TYPE_MAP = {
+  1: 'Crop',
+  2: 'Poultry',
+};
 
 function ProductDetail({ product, onClose, onEdit, onDelete }) {
   if (!product) return null;
@@ -22,7 +26,8 @@ function ProductDetail({ product, onClose, onEdit, onDelete }) {
       <p className="product-description">{product.productDescription}</p>
       <p><strong>Price:</strong> Php {product.productPrice?.toFixed(2)}</p>
       <p><strong>Stock:</strong> {product.productQuantity}</p>
-      <p><strong>Type:</strong> {product.productType}</p>
+      <p><strong>Type:</strong> {PRODUCT_TYPE_MAP[product.productType] || 'Unknown'}</p>
+
 
       <div className="detail-actions">
         <button className="back-button" onClick={onClose}>
