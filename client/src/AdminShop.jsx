@@ -74,6 +74,9 @@
                 <h3>{product.productName}</h3>
                 <p>Php {product.productPrice?.toFixed(2)}</p>
                 <p>Stock: {product.productQuantity}</p>
+                <span className="product-type-badge">
+                  {PRODUCT_TYPE_MAP[product.productType] || 'Unknown'}
+                </span>
               </div>
             ))}
           </div>

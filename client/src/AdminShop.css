@@ -244,3 +244,14 @@ body {
   padding: 30px;
   margin-top: 90px; /* height of navbar */
 }
+
+.product-type-badge {
+  display: inline-block;
+  background-color: #EEBA14;
+  color: #47532B;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 999px; /* Oblong pill shape */
+  margin-top: 8px;
+}

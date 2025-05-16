@@ -50,15 +50,26 @@
   transition: background-color 0.2s ease;
 }
 
+.sidebar-link-text {
+  color: inherit !important;
+}
+
+.sidebar-link:hover .sidebar-link-text {
+  color: #47532B !important;
+}
+
+
 /* Hover */
 .sidebar-link:hover {
   background-color: #f5e58c33;
+  color: #47532B  ;
 }
 
 /* Active */
 .sidebar-link.active {
   background-color: #EEBA14;
   font-weight: bold;
+  color: #47532B;
 }
 
 /* Icon */
