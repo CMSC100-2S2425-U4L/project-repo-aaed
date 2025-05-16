@@ -1,0 +1,121 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+body {
+    background-image: url('/src/assets/background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: var(--text-green);
+}
+
+.admin-shop-container, .user-panel {
+    min-height: 100vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.sidebar-fixed {
+    position: fixed;
+    top: 90px;
+    left: 0;
+    width: 220px;
+    height: calc(100vh - 90px);
+    z-index: 1000;
+}
+
+.product-panel, .sales-panel {
+    margin-left: 240px;
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+.sales-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 20px;
+}
+
+.sales-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f7f7f7;
+    border-radius: 15px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.sales-card h2 {
+    font-size: 30px;
+}
+
+.sales-card h3 {
+    padding: 10px 30px;
+    border-radius: 999px;
+    transition: background-color 0.2s ease;
+    background-color: #EEBA14;
+}
+
+.sales-table {
+    margin-top: 2rem;
+    background-color: #f7f7f7;
+    border-radius: 15px;
+    padding: 1rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    max-height: 310px; /* maxheight for scrolling */
+    overflow-y: auto; /* vertical scrolling */
+}
+
+.sales-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #f7f7f7;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.sales-table thead {
+    background: #EEBA14;
+    color: #47532B;
+    font-size: 1.2rem;
+    font-weight: bold;
+    /* position: sticky;
+    top: 
+    z-index: 1;  */
+}
+
+.sales-table thead tr {
+    height: 50px;
+}
+
+.sales-table th {
+    padding: 0.75rem;
+    text-align: left;
+}
+
+.sales-table tbody tr {
+    height: 48px;
+    border-bottom: 1px solid #E3F1D5;
+    transition: background 0.2s ease;
+}
+
+.sales-table tbody tr:hover {
+    background-color: #f4f4f4;
+}
+
+.sales-table td {
+    padding: 0.75rem;
+    font-size: 1rem;
+    color: #47532B;
+    text-align: left;
+}
+
+.sales-table tbody tr:last-child {
+    border-bottom: none;    
+}
