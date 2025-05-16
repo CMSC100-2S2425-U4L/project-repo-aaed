@@ -162,6 +162,14 @@ body, html, #root {
   margin-bottom: 1.5rem;
 }
 
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 460px;
+}
+
 .modal-content input {
   width: 100%;
   max-width: 460px;
