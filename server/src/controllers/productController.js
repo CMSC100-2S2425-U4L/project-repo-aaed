@@ -157,7 +157,21 @@ export const updateProduct = async (req, res) => {
 // get all products
 export const getAllProducts = async (req, res) => {
     try {
-        const products = await Product.find();
+        const { sortKey, sortDirection, productType } = req.query;
+        let filter = {};
+        let sort = {};
+
+        // Filtering by productType (if provided)
+        if (productType) {
+            filter.productType = Number(productType);
+        }
+
+        // Sorting (if provided)
+        if (sortKey && sortDirection) {
+            sort[sortKey] = sortDirection === 'asc' ? 1 : -1;
+        }
+
+        const products = await Product.find(filter).sort(sort);
         res.json(products);
     } catch (e) {
         console.error(e);
