@@ -34,21 +34,35 @@ const Cart = () => {
   }, [cartItems]);
 
   const handleQuantityChange = (id, amount) => {
-    setQuantities(prev => {
-      const item = cartItems.find(item => item.id === id);
-      const maxQty = item?.quantity || Infinity;
-      const newQty = Math.min(Math.max((prev[id] || 1) + amount, 1), maxQty);
+    // setQuantities(prev => {
+    //   const item = cartItems.find(item => item.id === id);
+    //   const maxQty = item?.quantity || Infinity;
+    //   const newQty = Math.min(Math.max((prev[id] || 1) + amount, 1), maxQty);
 
-      const updated = { ...prev, [id]: newQty };
+    //   const updated = { ...prev, [id]: newQty };
 
-      setCartItems(prevItems =>
-        prevItems.map(item =>
-          item.id === id ? { ...item, quantity: newQty } : item
-        )
-      );
+    //   setCartItems(prevItems =>
+    //     prevItems.map(item =>
+    //       item.id === id ? { ...item, quantity: newQty } : item
+    //     )
+    //   );
 
-      return updated;
-    });
+    //   return updated;
+    // });
+
+
+    //use stock amount for maxQty
+    setCartItems(prevItems =>
+      prevItems.map(item => {
+        if (item.id === id) {
+          const maxQty = item.stock || Infinity;
+          const currentQty = item.quantity || 1;
+          const newQty = Math.max(1, Math.min(currentQty + amount, maxQty));
+          return { ...item, quantity: newQty };
+        }
+        return item;
+      })
+    );
   };
 
   const toggleChecked = (id) => {
@@ -70,8 +84,15 @@ const Cart = () => {
   };
 
   const checkedCartItems = cartItems.filter(item => checkedItems.has(item.id));
+
+  // const subtotal = checkedCartItems.reduce(
+  //   (sum, item) => sum + (item.price * (quantities[item.id] || 1)),
+  //   0
+  // );
+
+  //fixed prices based on current quantity
   const subtotal = checkedCartItems.reduce(
-    (sum, item) => sum + (item.price * (quantities[item.id] || 1)),
+    (sum, item) => sum + (item.price * (item.quantity || 1)),
     0
   );
 
