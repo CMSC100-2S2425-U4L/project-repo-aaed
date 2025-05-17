@@ -5,7 +5,6 @@ import { useCart } from './CartContext';
 const Cart = () => {
   const { cartItems, setCartItems } = useCart();
 
-  // Initialize quantities from cartItems safely
   const [quantities, setQuantities] = useState(() =>
     cartItems.reduce((acc, item) => {
       acc[item.id] = item.quantity || 1;
@@ -13,7 +12,6 @@ const Cart = () => {
     }, {})
   );
 
-  // Keep quantities in sync if cartItems change externally
   useEffect(() => {
     setQuantities(
       cartItems.reduce((acc, item) => {
@@ -23,10 +21,8 @@ const Cart = () => {
     );
   }, [cartItems]);
 
-  // Checked items for selection
   const [checkedItems, setCheckedItems] = useState(new Set(cartItems.map(item => item.id)));
 
-  // Update checkedItems if cartItems change (keep selected items consistent)
   useEffect(() => {
     setCheckedItems(prevChecked => {
       const newChecked = new Set();
@@ -37,13 +33,14 @@ const Cart = () => {
     });
   }, [cartItems]);
 
-  // Handle quantity changes
   const handleQuantityChange = (id, amount) => {
     setQuantities(prev => {
-      const newQty = Math.max((prev[id] || 1) + amount, 1);
+      const item = cartItems.find(item => item.id === id);
+      const maxQty = item?.quantity || Infinity;
+      const newQty = Math.min(Math.max((prev[id] || 1) + amount, 1), maxQty);
+
       const updated = { ...prev, [id]: newQty };
 
-      // Also update cartItems context
       setCartItems(prevItems =>
         prevItems.map(item =>
           item.id === id ? { ...item, quantity: newQty } : item
@@ -54,7 +51,6 @@ const Cart = () => {
     });
   };
 
-  // Toggle checkbox for item selection
   const toggleChecked = (id) => {
     setCheckedItems(prev => {
       const newSet = new Set(prev);
@@ -64,7 +60,6 @@ const Cart = () => {
     });
   };
 
-  // Delete item from cart
   const handleDelete = (id) => {
     setCartItems(prev => prev.filter(item => item.id !== id));
     setCheckedItems(prev => {
@@ -74,7 +69,6 @@ const Cart = () => {
     });
   };
 
-  // Filter only checked items for subtotal calculation
   const checkedCartItems = cartItems.filter(item => checkedItems.has(item.id));
   const subtotal = checkedCartItems.reduce(
     (sum, item) => sum + (item.price * (quantities[item.id] || 1)),

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
 import './CustomerShop.css';
+import './CustomerShop.jsx';
+import { normalizeProduct } from './normalizeProduct';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -15,8 +17,9 @@ const CustomerProductDetail = ({ product, onClose, onAddToCart }) => {
   if (!product) return null;
 
   const handleAddToCart = () => {
-    onAddToCart(product, quantity);
-    onClose();
+  const normalizedProduct = normalizeProduct(product);
+  onAddToCart(normalizedProduct, quantity);
+  onClose();
   };
 
   return (
@@ -52,11 +55,12 @@ const CustomerProductDetail = ({ product, onClose, onAddToCart }) => {
         </button>
 
         <button
-          onClick={handleAddToCart}
           className="edit-button"
+          onClick={handleAddToCart}
         >
           Add to Cart
         </button>
+
       </div>
     </div>
   );

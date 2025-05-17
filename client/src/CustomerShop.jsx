@@ -1,13 +1,13 @@
   // import React, { useState } from 'react';
-  import './CustomerShop.css'; // You'll style sidebar, cards, modal here
-  import ProductDetail from './ProductDetail'; // Adjust path if needed
-  import ProductFormModal from './ProductFormModal'; // Adjust path as needed
+  import './CustomerShop.css';
+  import ProductFormModal from './ProductFormModal';
   import CustomerSidebar from './CustomerSidebar';
   import axios from 'axios';
   const API_URL = 'http://localhost:3000';
   import React, { useState, useEffect } from 'react';
   import CustomerProductDetail from './CustomerProductDetail'; 
   import { useCart } from './CartContext';
+  import { normalizeProduct } from './normalizeProduct';
 
 
 
@@ -85,19 +85,10 @@
                 <button
                     className="add-to-cart-btn"
                     onClick={(e) => {
-                        e.stopPropagation();
-                        const normalizedProduct = {
-                            id: product._id,
-                            name: product.productName,
-                            price: product.productPrice,
-                            imageUrl: product.productImage
-                            ? `${API_URL}/uploads/${product.productImage}`
-                            : '/src/assets/images/placeholder.jpg',
-                            quantity: 1,
-                            type: PRODUCT_TYPE_MAP[product.productType] || 'Unknown',
-                        };
-                        addToCart(normalizedProduct, 1);
-                        alert(`Added 1 x ${product.productName} to cart`);
+                      e.stopPropagation();
+                      const normalizedProduct = normalizeProduct(product);
+                      addToCart(normalizedProduct, 1);
+                      alert(`Added 1 x ${normalizedProduct.name} to cart`);
                     }}
                     >
                     Add to Cart
@@ -107,7 +98,7 @@
           </div>
         </main>
             
-        {selectedProduct && (
+        {/* {selectedProduct && (
             <CustomerProductDetail
                 product={{
                 ...selectedProduct,
@@ -126,8 +117,28 @@
                 //cart logic
                 }}
             />
-            )}
+            )} */}
 
+            {selectedProduct && (
+              <CustomerProductDetail
+                product={{
+                  ...selectedProduct,
+                  name: selectedProduct.productName,
+                  type: PRODUCT_TYPE_MAP[selectedProduct.productType],
+                  price: selectedProduct.productPrice,
+                  quantity: selectedProduct.productQuantity,
+                  imageUrl: selectedProduct.productImage
+                    ? `${API_URL}/uploads/${selectedProduct.productImage}`
+                    : '/src/assets/images/placeholder.jpg',
+                  description: selectedProduct.productDescription || 'No description available.',
+                }}
+                onClose={() => setSelectedProduct(null)}
+                onAddToCart={(product, quantity) => {
+                  addToCart(product, quantity);
+                  alert(`Added ${quantity} x ${product.name} to cart`);
+                }}
+              />
+            )}
 
         {isModalOpen && (
           <ProductFormModal

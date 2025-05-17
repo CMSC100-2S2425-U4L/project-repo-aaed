@@ -13,7 +13,6 @@ import CustomerShop from './CustomerShop';
 import CustomerOrder from './CustomerOrder';
 import Cart from './Cart';
 
-// Import your CartProvider from where you saved it
 import { CartProvider } from './CartContext';
 
 function Navbar({ handleProfileClick }) {
