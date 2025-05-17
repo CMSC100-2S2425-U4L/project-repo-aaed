@@ -4,6 +4,7 @@ import { useCart } from './CartContext';
 
 const Cart = () => {
   const { cartItems, setCartItems } = useCart();
+  const isCartFull = cartItems.every(item => item.quantity >= item.stock);  //check if cart is full
 
   const [quantities, setQuantities] = useState(() =>
     cartItems.reduce((acc, item) => {
@@ -108,7 +109,11 @@ const Cart = () => {
               <div className="quantity-controls">
                 <button onClick={() => handleQuantityChange(item.id, -1)}>-</button>
                 <span>{quantities[item.id]}</span>
-                <button onClick={() => handleQuantityChange(item.id, 1)}>+</button>
+                <button onClick={() => 
+                  handleQuantityChange(item.id, 1)}
+                  disabled={item.quantity >= item.stock}  //disable button if stock is full
+                  >+
+                </button>
               </div>
               <div className="product-price">
                 <input
