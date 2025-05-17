@@ -3,7 +3,6 @@
   gap: 1rem;
   margin-top: 1rem;
   flex-wrap: wrap;
-  overflow-y: auto;
 }
 
 
@@ -15,6 +14,9 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  margin-left: 1rem; /*added left margin*/
+  max-height: calc(100vh - 150px); /* Fixed max-height to enable scrolling */
+  overflow-y: auto; /*scrolling for orders */
 }
 
 .order-card {
@@ -47,20 +49,33 @@
 }
 
 .quantity-controls {
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 1rem;
+  border: 2px solid #b5b9b5a0;
+  border-radius: 999px;
+  padding: 0.25rem 1rem;
 }
 
 .quantity-controls button {
-  padding: 0.25rem 0.5rem;
+  padding: 0.7rem 1rem;
   font-size: 1rem;
-  background-color: #e0e0e0;
+  background-color: #fdd835;
   border: none;
-  border-radius: 0.25rem;
+  color: #444;
+  border-radius: 999px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quantity-controls span {
+  font-size: 1.2rem;
+  color: #444;
+  min-width: 10px;
+  text-align: center;
 }
 
 .product-price {
@@ -72,9 +87,26 @@
 }
 
 .product-price input[type="checkbox"] {
-  align-self: flex-start;
+  margin-right: 0.5rem;
   transform: scale(1.2);
   cursor: pointer;
+  width: 18px;
+  height: 18px;
+  appearance: none;
+  background-color: white;
+  border: 2px solid grey;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.product-price input[type="checkbox"]:checked {
+  background-color: #4caf50;
+  border-color: #4caf50;
+  background-image: 
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.2l-4.2-4.2-1.4 1.4L9 19 21 7l-1.4-1.4z'/%3E%3C/svg%3E"); /* check SVG */
+  background-size: 14px;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .price-breakdown {
@@ -101,11 +133,12 @@
   border-radius: 1rem;
   padding: 1.5rem;
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  min-height: calc(100vh - 120px); /* ✅ safer spacing below navbar */
+  min-height: calc(100vh - 165px); /* ✅ safer spacing below navbar */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   overflow-y: auto; /* ✅ scroll if content overflows */
+  margin-right: 1rem; /*added right margin*/
 }
 
 
