@@ -141,7 +141,7 @@ function Sidebar({ onSortChange }) {
               style={{ cursor: 'pointer' }}
             > 
               <FaBox className="sidebar-icon" />
-              <NavLink to="/sales" className={({ isActive }) => `sidebar-link ${isActive ? "active" : ""}`}>Sales</NavLink>
+              <NavLink to="/sales" className={({ isActive }) => `sidebar-link-text ${isActive ? "active" : ""}`}>Sales</NavLink>
             </div>
             {isSalesExpanded && (
               <div className="view-options">
