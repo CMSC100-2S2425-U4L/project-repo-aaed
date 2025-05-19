@@ -87,8 +87,16 @@
                     onClick={(e) => {
                       e.stopPropagation();
                       const normalizedProduct = normalizeProduct(product);
-                      addToCart(normalizedProduct, 1);
-                      alert(`Added 1 x ${normalizedProduct.name} to cart`);
+                      const addedToCart = addToCart(normalizedProduct, 1);  //set as const variable first
+
+                      if(addedToCart){
+                        alert(`Added 1 x ${normalizedProduct.name} to cart`);
+                      } else {
+                        alert(`Failed to add 1 x ${normalizedProduct.name} to cart: stock exceeded`); //display error
+                      }
+
+                      // addToCart(normalizedProduct, 1);
+                      // alert(`Added 1 x ${normalizedProduct.name} to cart`);
                     }}
                     >
                     Add to Cart
