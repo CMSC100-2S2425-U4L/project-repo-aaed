@@ -3,7 +3,7 @@ import './Cart.css';
 import { useCart } from './CartContext';
 
 const Cart = () => {
-  const { cartItems, setCartItems } = useCart();
+  const { cartItems, setCartItems, addOrder} = useCart();
   const isCartFull = cartItems.every(item => item.quantity >= item.stock);  //check if cart is full
 
   const [quantities, setQuantities] = useState(() =>
@@ -95,6 +95,29 @@ const Cart = () => {
     0
   );
 
+  const handleCheckout = () => {
+    if(checkedCartItems.length === 0) return;
+
+    const order = {
+      items: checkedCartItems.map(item => ({
+        productId: item.id,
+        quantity: item.quantity || 1,
+      })),
+      orderStatus: 1,
+      email: 'sample@email.com',
+      dateOrdered: new Date(),
+      time: new Date().toLocaleTimeString(),
+      totalAmount: subtotal,
+    };
+
+    addOrder(order);
+    setCartItems(prev => prev.filter(item => !checkedItems.has(item.id)));
+    setCheckedItems(new Set());
+
+    alert('Order placed successfully!');
+  };
+
+
   return (
     <div className="admin-shop-container">
       <div className="cart-content">
@@ -140,7 +163,8 @@ const Cart = () => {
             <p className="total">
               Total: <span className="pill">Php {subtotal.toFixed(2)}</span>
             </p>
-            <button className="checkout-button" disabled={checkedCartItems.length === 0}>
+            <button className="checkout-button" disabled={checkedCartItems.length === 0}
+              onClick={handleCheckout}>
               Checkout
             </button>
           </div>
