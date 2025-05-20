@@ -4,6 +4,8 @@ const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [products, setProducts] = useState([]);
 
   const addToCart = (product, quantity = 1) => {
     // setCartItems(prev => {
@@ -44,14 +46,31 @@ export const CartProvider = ({ children }) => {
         return prev;
       }
 
+      //save product info
+      setProducts(prevProducts => ({
+        ...prevProducts,
+        [product.id]: {
+          name: product.name,
+          price: product.price,
+          type: product.type,
+          quantity: product.quantity,
+          image: product.image
+        },
+      }))
+
       return [...prev, { ...product, quantity, stock }];
     });
 
     return added;
   };
 
+  //add order
+  const addOrder = (order) => {
+    setOrders(prev => [...prev, order]);
+  }
+
   return (
-    <CartContext.Provider value={{ cartItems, setCartItems, addToCart }}>
+    <CartContext.Provider value={{ cartItems, setCartItems, addToCart, orders, addOrder, products }}>
       {children}
     </CartContext.Provider>
   );

@@ -1,0 +1,88 @@
+:root {
+  --primary-yellow: #EEBA14;
+  --background-light: #eef2df;
+  --card-white: #ffffff;
+  --text-dark: #333333;
+  --sidebar-bg: #f4f4f4;
+  --modal-overlay: rgba(0, 0, 0, 0.4);
+  --text-green: #47532B;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background-image: url('/src/assets/background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: var(--text-green);
+}
+
+.admin-shop-container, .order-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 90px); /* Adjust for navbar height */
+  overflow-y: auto; /* Allow scrolling */
+  position: relative;
+  padding-top: 90px; /* Ensure content is not hidden under navbar */
+}
+
+.sidebar-fixed {
+  position: fixed;
+  top: 90px; /* height of navbar */
+  left: 0;
+  width: 220px;
+  height: calc(100vh - 90px); /* Adjust for navbar height */
+  z-index: 1000;
+}
+
+.order-panel {
+  flex-grow: 1;
+  margin-left: 240px; /* Adjust for sidebar */
+  padding: 2rem;
+  overflow-y: auto;
+  height: 90vh; /*test*/
+  z-index: 1; /* Content above background */
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background-color: var(--sidebar-bg);
+  padding: 1.5rem 1rem;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar h2 {
+  color: var(--primary-yellow);
+  margin-bottom: 2rem;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 12px;
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.sidebar li:hover {
+  background-color: #e6e6e6;
+}
+
+.sidebar .active {
+  background-color: var(--primary-yellow);
+  color: white;
+}
