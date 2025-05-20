@@ -157,7 +157,7 @@ const Cart = () => {
         </div>
         <div className="cart-summary">
           <h3>Order Summary</h3>
-          <p>Cart Items: {checkedCartItems.length}</p>
+          <p>Cart Items: {checkedCartItems.reduce((total, item) => total + item.quantity, 0)}</p>
           <p>Subtotal: Php {subtotal.toFixed(2)}</p>
           <div className="checkout-section">
             <p className="total">
