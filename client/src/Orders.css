@@ -1,0 +1,144 @@
+:root {
+  --primary-yellow: #EEBA14;
+  --background-light: #eef2df;
+  --card-white: #ffffff;
+  --text-dark: #333333;
+  --sidebar-bg: #f4f4f4;
+  --modal-overlay: rgba(0, 0, 0, 0.4);
+  --text-green: #47532B;
+  --border-green: #A9C5A6; /* Subtle green from the image border */
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden; 
+}
+
+body {
+  background-image: url('/src/assets/background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: var(--text-green);
+}
+
+.admin-shop-container, .user-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 90px); /* Adjust for navbar height */
+  overflow-y: auto; /* Allow scrolling */
+  position: relative;
+  padding-top: 90px; /* Ensure content is not hidden under navbar */
+}
+
+
+.sidebar-fixed {
+  position: fixed;
+  top: 90px; /* Adjust based on navbar height */
+  left: 0;
+  width: 220px;
+  height: calc(100vh - 90px);
+  z-index: 1000;
+}
+
+.order-panel {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  margin-left: 240px; /* Adjust for sidebar */
+  padding: 2rem;
+  overflow-y: auto; /* Ensure screen is scrollable */
+  height: 80vh;
+  z-index: 1; /* Content above background */
+}
+
+.order-grid {
+  display: grid;
+  grid-template-rows: repeat(auto-fit, minmax(100px, auto));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.order-card {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--card-white);
+  border: 2px solid var(--border-green);;
+  padding: 1rem;
+  border-radius: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  min-height: 100px;
+}
+
+.order-info {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  gap: 5rem;
+  text-align: center;
+}
+
+.order-date {
+  margin-left: 20px;
+}
+
+.order-items {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  flex: 2;
+  overflow-y: auto;
+  max-height: 250px; /* Adjust as needed */
+  margin-bottom: 10px;
+}
+
+.order-item-info p {
+    line-height: 1.2;
+    margin: 0;
+    text-align: left;;
+}
+
+.order-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+  background-color: #ffffff;
+}
+
+.order-item-info {
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.order-status {
+  flex: 1;
+  text-align: center;
+}
+
+.order-status-button {
+  background-color: lightgrey;
+  color: var(--text-dark);
+  border: none;
+  border-radius: 999px;
+  padding: 15px 25px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.order-status-button:hover {
+  background-color: #d9a80f;
+}
+
+.order-status-button:enabled {
+  background-color: var(--primary-yellow);
+  color: var(--text-dark);
+  cursor: pointer;
+}
