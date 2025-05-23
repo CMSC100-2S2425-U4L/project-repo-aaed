@@ -24,7 +24,7 @@ body {
   color: var(--text-green);
 }
 
-.admin-shop-container, .order-panel {
+.admin-shop-container {
   display: flex;
   flex-direction: column;
   min-height: calc(100vh - 90px); /* Adjust for navbar height */
@@ -42,13 +42,113 @@ body {
   z-index: 1000;
 }
 
-.order-panel {
+.customer-order-panel {
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
   margin-left: 240px; /* Adjust for sidebar */
   padding: 2rem;
-  overflow-y: auto;
-  height: 90vh; /*test*/
+  overflow-y: auto; /* Ensure screen is scrollable */
+  height: 80vh;
   z-index: 1; /* Content above background */
+}
+
+.customer-order-grid {
+  display: grid;
+  grid-template-rows: repeat(auto-fit, minmax(250px, auto));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.customer-order-card {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--card-white);
+  border-radius: 1rem;
+  padding: 2px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  position: relative; /*for button*/
+  min-height: 250px; 
+}
+
+.customer-order-info {
+  flex: 1;
+  padding: 1rem;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.customer-order-items {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  max-height: 300px; /*max height for scrolling items*/
+}
+
+.customer-order-item-info {
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+}
+
+.customer-order-info p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.customer-order-info h3 {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.customer-order-info h4 {
+  margin: 0.5rem 0;
+}
+
+.customer-order-status {
+  text-align: right;
+  position: absolute;
+  bottom: 65px;
+  right: 15px;
+  font-size: 18px;
+}
+
+.customer-order-status .order-total {
+  font-weight: bold;
+}
+
+.customer-order-id {
+  font-size: 18px;
+  margin-left: auto;
+  margin-right: 10px;
+  text-align: right;
+}
+
+.customer-order-image {
+  width: 100px !important; /* Override inline style */
+  height: 100px !important; /* Override inline style */
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.customer-order-card .order-button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: var(--primary-yellow);
+  color: var(--text-dark);
+  font-weight: bold;
+  border: none;
+  padding: 15px 20px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.customer-order-card .order-button:hover {
+  background-color: #d9a80f;
 }
 
 /* Sidebar */
