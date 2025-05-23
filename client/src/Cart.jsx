@@ -99,11 +99,12 @@ const Cart = () => {
     if(checkedCartItems.length === 0) return;
 
     const order = {
+      id: new Date().getTime(), //sample ID for now
       items: checkedCartItems.map(item => ({
         productId: item.id,
         quantity: item.quantity || 1,
       })),
-      orderStatus: 1,
+      orderStatus: 0,
       email: 'sample@email.com',
       dateOrdered: new Date(),
       time: new Date().toLocaleTimeString(),
