@@ -126,8 +126,8 @@ body {
 }
 
 .customer-order-image {
-  width: 100px !important; /* Override inline style */
-  height: 100px !important; /* Override inline style */
+  width: 150px !important; /* Override inline style */
+  height: 150px !important; /* Override inline style */
   object-fit: cover;
   border-radius: 5px;
 }
