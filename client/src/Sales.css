@@ -119,3 +119,29 @@ body {
 .sales-table tbody tr:last-child {
     border-bottom: none;    
 }
+
+.sales-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.sales-tabs button {
+  padding: 10px 20px;
+  border: 2px solid var(--primary-yellow);
+  background: transparent;
+  color: var(--text-green);
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.sales-tabs button:hover {
+  background-color: #fceba0;
+}
+
+.sales-tabs button.active {
+  background-color: var(--primary-yellow);
+  color: white;
+}
