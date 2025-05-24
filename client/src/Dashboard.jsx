@@ -1,30 +1,34 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Dashboard.css';
 import Sidebar from './Sidebar';
-import { Link } from 'react-router-dom'; // Add this if not yet
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { useCart } from './CartContext';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 function Dashboard() {
+  const [products, setProducts] = useState([]);
+  const { orders, products: cartProducts } = useCart(); // from CartContext
+
+  // For now, users are still hardcoded
   const users = [
     { id: 1, name: 'Mike Wazowski', username: '@mikewazowski', email: 'mikewazowski@gmail.com', image: '/src/assets/images/mike.jpg' },
     { id: 2, name: 'Sully Sullivan', username: '@sully', email: 'sully@monstersinc.com', image: '/src/assets/images/sully.jpg' },
   ];
 
-  const products = [
-    { id: 1, name: 'Chicken Eggs', price: 35.00, stock: 10, type: 'Poultry', image: '/src/assets/images/placeholder.jpg' },
-    { id: 2, name: 'Rice', price: 45.00, stock: 5, type: 'Crop', image: '/src/assets/images/placeholder.jpg' },
-  ];
+  const fetchProducts = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/product/`);
+      setProducts(res.data);
+    } catch (err) {
+      console.error("Error fetching products:", err);
+    }
+  };
 
-  const orders = [
-    {
-      id: 'ORD001',
-      items: [
-        { name: 'Chicken Eggs', quantity: 2, price: 35.00 },
-        { name: 'Rice', quantity: 1, price: 45.00 },
-      ],
-      total: 115.00,
-      status: 1
-    },
-  ];
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   return (
     <div className="admin-shop-container">
@@ -32,6 +36,7 @@ function Dashboard() {
       <main className="dashboard-panel">
         <h1>Admin Dashboard</h1>
 
+        {/* Summary Cards */}
         <div className="dashboard-grid">
           <div className="dashboard-card"><h3>Total Users</h3><p>{users.length}</p></div>
           <div className="dashboard-card"><h3>Total Products</h3><p>{products.length}</p></div>
@@ -66,13 +71,18 @@ function Dashboard() {
             <Link to="/shop" className="view-all-link">View All</Link>
           </div>
           <div className="dashboard-scroll-preview">
-            {products.map(product => (
-              <div className="product-card" key={product.id}>
-                <img src={product.image} alt={product.name} />
-                <h3>{product.name}</h3>
-                <p>Php {product.price.toFixed(2)}</p>
-                <p>Stock: {product.stock}</p>
-                <span className="product-type-badge">{product.type}</span>
+            {products.slice(0, 5).map(product => (
+              <div className="product-card" key={product._id}>
+                <img
+                  src={product.productImage ? `${API_URL}/uploads/${product.productImage}` : '/src/assets/images/placeholder.jpg'}
+                  alt={product.productName}
+                />
+                <h3>{product.productName}</h3>
+                <p>Php {product.productPrice?.toFixed(2)}</p>
+                <p>Stock: {product.productQuantity}</p>
+                <span className="product-type-badge">
+                  {product.productType === 1 ? "Crop" : product.productType === 2 ? "Poultry" : "Unknown"}
+                </span>
               </div>
             ))}
           </div>
@@ -85,13 +95,14 @@ function Dashboard() {
             <Link to="/orders" className="view-all-link">View All</Link>
           </div>
           <div className="dashboard-scroll-preview">
-            {orders.map(order => (
+            {orders.slice(0, 5).map(order => (
               <div className="customer-order-card" key={order.id}>
                 <div className="customer-order-info">
                   <div>
                     <h4>Order ID: {order.id}</h4>
-                    <p>Status: {order.status === 1 ? "Paid" : "Pending"}</p>
-                    <p>Total: Php {order.total.toFixed(2)}</p>
+                    <p>Status: {order.orderStatus === 1 ? "Confirmed" : "Pending"}</p>
+                    <p>Total: Php {order.totalAmount?.toFixed(2)}</p>
+                    <p>Date: {new Date(order.dateOrdered).toLocaleDateString()}</p>
                   </div>
                 </div>
               </div>
