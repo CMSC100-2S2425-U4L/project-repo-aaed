@@ -119,6 +119,61 @@ export const getOrdersByEmail = async (req, res) => {
     }
 };
 
+// Update order status 
+export const updateOrderStatus = async (req, res) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+        const { id } = req.params;
+        const { orderStatus } = req.body;
+
+        if (!id || (orderStatus !== 0 && orderStatus !== 1 && orderStatus !== 2)) {
+            await session.abortTransaction();
+            return res.status(400).json({ 
+                updated: false, 
+                message: "Missing order ID or invalid status" 
+            });
+        }
+
+        const order = await Order.findById(id).populate('items.productId').session(session);
+
+        if (!order) {
+            await session.abortTransaction();
+            return res.status(404).json({ updated: false, message: "Order not found!" });
+        }
+
+        // If changing from pending (0) to confirmed (1), update product quantities
+        if (order.orderStatus === 0 && orderStatus === 1) {
+            for (const item of order.items) {
+                const product = item.productId;
+                if (product.productQuantity < item.quantity) {
+                    await session.abortTransaction();
+                    return res.status(400).json({ 
+                        updated: false, 
+                        message: `Insufficient quantity for product ${product.productName}` 
+                    });
+                }
+                product.productQuantity -= item.quantity;
+                await product.save({ session });
+            }
+        }
+
+        // Update order status
+        order.orderStatus = orderStatus;
+        await order.save({ session });
+
+        await session.commitTransaction();
+        res.json({ updated: true, message: "Order status updated!", order });
+    } catch (e) {
+        await session.abortTransaction();
+        console.error('Order status update failed:', e);
+        res.status(500).json({ updated: false, message: "Server Error during transaction" });
+    } finally {
+        session.endSession();
+    }
+};
+
 // Get all orders 
 export const getAllOrders = async (req, res) => {
     try {
