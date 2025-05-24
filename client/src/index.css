@@ -31,6 +31,8 @@ html, body {
   height: 100%; /* Ensure the height of the entire document is 100% */
   margin: 0;
   padding: 0;
+  margin: 0;
+  overflow: hidden;
 }
 
 html, body, #root {
