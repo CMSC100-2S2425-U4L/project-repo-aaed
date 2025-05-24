@@ -50,9 +50,7 @@ function CustomerOrder() {
                 
 
                 <div className="customer-order-status">
-                  <p style={{ color: order.orderStatus === 1 ? 'green' : 'red', fontWeight: 'bold' }}>
-                    Status: {order.orderStatus === 1 ? 'Paid' : 'Pending'}
-                  </p>
+                  <p>Status: <span style={{ color: order.orderStatus === 1 ? 'green' : order.orderStatus === 2 ? 'red' : 'orange', fontWeight: 'bold' }}>{order.orderStatus === 1 ? 'Paid' : order.orderStatus === 2 ? 'Canceled' : 'Pending'}</span></p>
                   <p className="order-total">Total&nbsp;{order.items.reduce((total, item) => total + item.quantity, 0)}&nbsp;Items:&nbsp;Php {order.totalAmount.toFixed(2)}</p>
                 </div>
 

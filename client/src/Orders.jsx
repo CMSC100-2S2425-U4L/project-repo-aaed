@@ -1,68 +1,91 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './CustomerShop.css';
 import './Sidebar.css';
-import './CustomerOrder.css';
+import './Orders.css';
 import Sidebar from './Sidebar';
 import { useCart } from './CartContext';
 
 function Orders() {
-  const { orders, setOrders, products } = useCart();
+  const { orders, products, addOrder, updateOrderStatus } = useCart();
+
   const PRODUCT_TYPE_MAP = {
-  1: 'Crop',
-  2: 'Poultry',
+    1: 'Crop',
+    2: 'Poultry',
   };
-  const modeOfPayment = "Cash On Delivery";
+
+  const handleOrderStatusChange = (orderId, newStatus) => {
+    setOrders((prevOrders) =>
+      prevOrders.map((order) =>
+        order.id === orderId ? { ...order, orderStatus: newStatus } : order
+      )
+    );
+  };
 
   return (
     <div className="admin-shop-container">
-      <Sidebar />
-      <div className="customer-order-panel">
-        <div className="customer-order-grid">
-          {orders.map((order) => (
-            <div key={order.id} className="customer-order-card">
-              <div className="customer-order-info">
+      <Sidebar /> 
+      <div className="order-panel">
+        <div className="order-grid">
 
-                <div className="customer-order-items">
-                  <h3>Items:</h3>
+          {orders.map((order) => (
+            <div key={order.id} className="order-card">
+              <div className="order-info">
+
+                <div className="order-date">
+                  <p><strong>Date</strong></p>
+                  <p>{new Date(order.dateOrdered).toLocaleDateString()}</p>
+                </div>
+
+                <div className="order-id">
+                  <p><strong>Order ID</strong></p>
+                  <p>{order.id}</p>
+                </div>
+
+
+                <div className="order-items">
+                  <p><strong>Items</strong></p>
                   {order.items.map((item, index) => {
                     const product = products[item.productId] || {};
                     return (
                       <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
-                        <img className = "customer-order-image"
-                          src={product.productImage || '/src/assets/images/placeholder.jpg'}
-                          alt={product.name || 'Product Image'}
+                        <img
+                          className="order-image"
+                          src={product.image || '/src/assets/images/placeholder.jpg'}
+                          alt={product.productName || 'Product Image'}
                         />
-                        <div className="customer-order-item-info">
+                        <div className="order-item-info">
                           <p><strong>{product.name || 'Unknown Product'}</strong></p>
-                          <p>Type: {PRODUCT_TYPE_MAP[product.type] || product.type || 'Unknown'}</p>
-                          <p>Quantity: x{item.quantity}</p>
-                          <p>Price: Php {item.quantity * product.price}</p>
+                          <p>Quantity: {item.quantity}</p>
                         </div>
                       </div>
                     );
                   })}
                 </div>
 
-                <div className="customer-order-id">
-                  <p><strong>Order ID: {order.id}</strong></p>
-                  <p>Mode of Payment: {modeOfPayment}</p>
-                </div>
-                
-
-                <div className="customer-order-status">
-                  <p style={{ color: order.orderStatus === 1 ? 'green' : 'red', fontWeight: 'bold' }}>
-                    Status: {order.orderStatus === 1 ? 'Paid' : 'Pending'}
-                  </p>
-
-                  <p className="order-total">Total&nbsp;{order.items.reduce((total, item) => total + item.quantity, 0)}&nbsp;Items:&nbsp;Php {order.totalAmount.toFixed(2)}</p>
+                <div className="order-price">
+                  <p><strong>Total Price</strong></p>
+                  <p>Php {order.totalAmount.toFixed(2)}</p>
                 </div>
 
-                <button className="order-button">Cancel</button>
+              <div className="order-status">
+                <p><strong>Status</strong></p>
+                <button
+                  className="order-status-button"
+                  style={{
+                    backgroundColor: order.orderStatus === 1 ? '#4CAF50' : '#ddd',
+                  }}
+                  onClick={() => handleOrderStatusChange(order.id, 1)}
+                >
+                  {order.orderStatus === 1 ? 'Confirmed' : 'Not Confirmed'}
+                </button>
+              </div>
+
               </div>
             </div>
-          ))} 
+          ))}
         </div>
       </div>
+
     </div>
   );
 }

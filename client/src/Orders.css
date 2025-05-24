@@ -6,6 +6,7 @@
   --sidebar-bg: #f4f4f4;
   --modal-overlay: rgba(0, 0, 0, 0.4);
   --text-green: #47532B;
+  --border-green: #A9C5A6; /* Subtle green from the image border */
 }
 
 html, body {
@@ -13,6 +14,7 @@ html, body {
   padding: 0;
   height: 100%;
   width: 100%;
+  overflow: hidden; 
 }
 
 body {
@@ -24,7 +26,7 @@ body {
   color: var(--text-green);
 }
 
-.admin-shop-container {
+.admin-shop-container, .user-panel {
   display: flex;
   flex-direction: column;
   min-height: calc(100vh - 90px); /* Adjust for navbar height */
@@ -33,16 +35,17 @@ body {
   padding-top: 90px; /* Ensure content is not hidden under navbar */
 }
 
+
 .sidebar-fixed {
   position: fixed;
-  top: 90px; /* height of navbar */
+  top: 90px; /* Adjust based on navbar height */
   left: 0;
   width: 220px;
-  height: calc(100vh - 90px); /* Adjust for navbar height */
+  height: calc(100vh - 90px);
   z-index: 1000;
 }
 
-.customer-order-panel {
+.order-panel {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -53,136 +56,89 @@ body {
   z-index: 1; /* Content above background */
 }
 
-.customer-order-grid {
+.order-grid {
   display: grid;
-  grid-template-rows: repeat(auto-fit, minmax(250px, auto));
+  grid-template-rows: repeat(auto-fit, minmax(100px, auto));
   gap: 1rem;
   margin-top: 1rem;
 }
 
-.customer-order-card {
-  display: flex;
-  flex-direction: column;
-  background-color: var(--card-white);
-  border-radius: 1rem;
-  padding: 2px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  position: relative; /*for button*/
-  min-height: 250px; 
-}
-
-.customer-order-info {
-  flex: 1;
-  padding: 1rem;
+.order-card {
   display: flex;
   flex-direction: row;
-  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--card-white);
+  border: 2px solid var(--border-green);;
+  padding: 1rem;
+  border-radius: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  min-height: 100px;
 }
 
-.customer-order-items {
-  flex: 2;
+.order-info {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  gap: 5rem;
+  text-align: center;
+}
+
+.order-date {
+  margin-left: 20px;
+}
+
+.order-items {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  flex: 2;
   overflow-y: auto;
-  max-height: 300px; /*max height for scrolling items*/
+  max-height: 250px; /* Adjust as needed */
+  margin-bottom: 10px;
 }
 
-.customer-order-item-info {
-  font-size: 0.9rem;
-  margin: 0.5rem 0;
+.order-item-info p {
+    line-height: 1.2;
+    margin: 0;
+    text-align: left;;
 }
 
-.customer-order-info p {
-  margin: 0;
-  line-height: 1.5;
-}
-
-.customer-order-info h3 {
-  margin: 0;
-  line-height: 1.5;
-}
-
-.customer-order-info h4 {
-  margin: 0.5rem 0;
-}
-
-.customer-order-status {
-  text-align: right;
-  position: absolute;
-  bottom: 65px;
-  right: 15px;
-  font-size: 18px;
-}
-
-.customer-order-status .order-total {
-  font-weight: bold;
-}
-
-.customer-order-id {
-  font-size: 18px;
-  margin-left: auto;
-  margin-right: 10px;
-  text-align: right;
-}
-
-.customer-order-image {
-  width: 100px !important; /* Override inline style */
-  height: 100px !important; /* Override inline style */
+.order-image {
+  width: 100px;
+  height: 100px;
   object-fit: cover;
   border-radius: 5px;
+  background-color: #ffffff;
 }
 
-.customer-order-card .order-button {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background-color: var(--primary-yellow);
+.order-item-info {
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.order-status {
+  flex: 1;
+  text-align: center;
+}
+
+.order-status-button {
+  background-color: lightgrey;
   color: var(--text-dark);
-  font-weight: bold;
   border: none;
-  padding: 15px 20px;
   border-radius: 999px;
+  padding: 15px 25px;
   font-size: 0.9rem;
   cursor: pointer;
-  transition: background-color 0.2s;
 }
 
-.customer-order-card .order-button:hover {
+.order-status-button:hover {
   background-color: #d9a80f;
 }
 
-/* Sidebar */
-.sidebar {
-  width: 220px;
-  background-color: var(--sidebar-bg);
-  padding: 1.5rem 1rem;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
-}
-
-.sidebar h2 {
-  color: var(--primary-yellow);
-  margin-bottom: 2rem;
-}
-
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-}
-
-.sidebar li {
-  padding: 0.75rem 1rem;
-  margin-bottom: 0.5rem;
-  border-radius: 12px;
+.order-status-button:enabled {
+  background-color: var(--primary-yellow);
   color: var(--text-dark);
   cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.sidebar li:hover {
-  background-color: #e6e6e6;
-}
-
-.sidebar .active {
-  background-color: var(--primary-yellow);
-  color: white;
 }
