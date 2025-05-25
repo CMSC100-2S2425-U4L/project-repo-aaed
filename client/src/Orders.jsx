@@ -21,6 +21,23 @@ function Orders() {
     );
   };
 
+  const handleConfirm = (orderId, currentStatus) => {
+    if (currentStatus === 1) {  //confirmd
+      alert("Error: Cannot confirm order that is already confirmed.");
+      return;
+    }
+
+    if (currentStatus == 2) { //canceled
+      alert("Error: Cannot confirm order that is already canceled.");
+      return;
+    }
+
+    const confirmed = updateOrderStatus(orderId, 1);
+    if (confirmed) {
+      alert("Order confirmed successfully!");
+    }
+  }
+
   return (
     <div className="admin-shop-container">
       <Sidebar /> 
@@ -70,13 +87,15 @@ function Orders() {
               <div className="order-status">
                 <p><strong>Status</strong></p>
                 <button
-                  className="order-status-button"
-                  style={{
-                    backgroundColor: order.orderStatus === 1 ? '#4CAF50' : '#ddd',
-                  }}
-                  onClick={() => handleOrderStatusChange(order.id, 1)}
-                >
-                  {order.orderStatus === 1 ? 'Confirmed' : 'Not Confirmed'}
+                    className="order-status-button"
+                    onClick={() => handleConfirm(order.id, order.orderStatus)}
+                    disabled={order.orderStatus === 1 || order.orderStatus === 2}
+                    style={{
+                      backgroundColor: order.orderStatus === 1 ? '#4CAF50' : order.orderStatus === 2 ? '#ED4C4C' : '#EEBA14',
+                      cursor: order.orderStatus === 1 || order.orderStatus === 2 ? 'not-allowed' : 'pointer', // Disable button
+                    }}
+                  >
+                    {order.orderStatus === 1 ? 'Confirmed' : order.orderStatus === 2 ? 'Canceled' : 'Confirm'}
                 </button>
               </div>
 
