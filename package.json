@@ -1,15 +1,15 @@
 {
-    "name": "CMSC100-Project",
-    "version": "1.0.0",
-    "private": true,
-    "scripts": {
-        "server": "cd server && npm install && npm start",
-        "client": "cd client && npm install && npm run dev",
-        "dev": "concurrently \"npm run server\" \"npm run client\""
-    },
-    "dependencies": {
-        "concurrently": "^9.1.2",
-        "react-icons": "^5.5.0",
-        "react-router-dom": "^7.6.0"
-    }
+  "name": "CMSC100-Project",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "server": "cd server && npm install && npm start",
+    "client": "cd client && npm install && npm run dev",
+    "dev": "node init && concurrently \"npm run server\" \"npm run client\""
+  },
+  "dependencies": {
+    "concurrently": "^9.1.2",
+    "react-icons": "^5.5.0",
+    "react-router-dom": "^7.6.0"
+  }
 }
