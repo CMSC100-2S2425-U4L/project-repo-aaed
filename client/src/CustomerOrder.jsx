@@ -6,12 +6,30 @@ import CustomerSidebar from './CustomerSidebar';
 import { useCart } from './CartContext';
 
 function CustomerOrder() {
-  const { orders, setOrders, products } = useCart();
+  const { orders, setOrders, products, updateOrderStatus } = useCart();
   const PRODUCT_TYPE_MAP = {
   1: 'Crop',
   2: 'Poultry',
   };
   const modeOfPayment = "Cash On Delivery";
+
+  const handleCancel = (orderId, currentStatus) => {
+    if (currentStatus === 1) {  //confirmed
+      alert("Error: Cannot cancel order that is already confirmed.");
+      return;
+    }
+
+    if (currentStatus == 2) { //canceled
+      alert("Error: Cannot cancel order that is already canceled.");
+      return;
+    }
+
+    const canceled = updateOrderStatus(orderId, 2);
+    if (canceled) {
+      alert("Order canceled successfully!");
+    }
+  };
+
 
   return (
     <div className="admin-shop-container">
@@ -54,7 +72,19 @@ function CustomerOrder() {
                   <p className="order-total">Total&nbsp;{order.items.reduce((total, item) => total + item.quantity, 0)}&nbsp;Items:&nbsp;Php {order.totalAmount.toFixed(2)}</p>
                 </div>
 
-                <button className="order-button">Cancel</button>
+                <button
+                  className="order-button"
+                  onClick={() => handleCancel(order.id, order.orderStatus)}
+                  disabled={order.orderStatus === 1 || order.orderStatus === 2}
+                  style={{
+                    backgroundColor: order.orderStatus === 1 || order.orderStatus === 2 ? '#ccc' : '#EEBA14',
+                    cursor: order.orderStatus === 1 || order.orderStatus === 2 ? 'not-allowed' : 'pointer',
+                  }}
+                >
+                Cancel
+                </button>
+
+
               </div>
             </div>
           ))}
