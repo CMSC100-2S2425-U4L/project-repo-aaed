@@ -7,21 +7,34 @@ function SigninPage({ setIsLoggedIn, setShowModal, setUserData }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const email = e.target[0].value;
 
-    const dummyUser = {
-      firstName: "Jane",
-      middleName: "C.",
-      lastName: "Doe",
-      email: "jane@example.com",
-      userType: "customer",
-    };
+    let dummyUser;
+
+    if (email === "admin@example.com") {
+        dummyUser = {
+        firstName: "Admin",
+        middleName: "",
+        lastName: "User",
+        email,
+        userType: "admin",
+        };
+    } else {
+        dummyUser = {
+        firstName: "Jane",
+        middleName: "C.",
+        lastName: "Doe",
+        email,
+        userType: "customer",
+        };
+    }
 
     setUserData(dummyUser);
     setIsLoggedIn(true);
     setShowModal(false);
 
-    navigate("/profile"); // Navigate to profile page after sign in
-  };
+    navigate("/profile");
+    };
 
   return (
     <div className="modal-overlay" onClick={() => setShowModal(false)}>

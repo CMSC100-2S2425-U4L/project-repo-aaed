@@ -17,52 +17,38 @@ import Cart from "./Cart";
 
 import { CartProvider } from "./CartContext";
 
-function Navbar({ handleProfileClick }) {
+function Navbar({ handleProfileClick, role }) {
   return (
     <header className="navbar">
       <img src={logo} alt="AgriMart Logo" className="logo" />
       <nav>
         <ul className="nav-links">
           <li>
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                `nav-item ${isActive ? "active-tab" : ""}`
-              }
-            >
+            <NavLink to="/" className={({ isActive }) => `nav-item ${isActive ? "active-tab" : ""}`}>
               Home
             </NavLink>
           </li>
           <li>
-            <NavLink
-              to="/shop"
-              className={({ isActive }) =>
-                `nav-item ${isActive ? "active-tab" : ""}`
-              }
-            >
+            <NavLink to="/shop" className={({ isActive }) => `nav-item ${isActive ? "active-tab" : ""}`}>
               Shop
             </NavLink>
           </li>
-          <li>
-            <NavLink
-              to="/cart"
-              className={({ isActive }) =>
-                `nav-item ${isActive ? "active-tab" : ""}`
-              }
-            >
-              Cart
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/about"
-              className={({ isActive }) =>
-                `nav-item ${isActive ? "active-tab" : ""}`
-              }
-            >
-              About
-            </NavLink>
-          </li>
+
+          {role !== "admin" && (
+            <>
+              <li>
+                <NavLink to="/cart" className={({ isActive }) => `nav-item ${isActive ? "active-tab" : ""}`}>
+                  Cart
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/about" className={({ isActive }) => `nav-item ${isActive ? "active-tab" : ""}`}>
+                  About
+                </NavLink>
+              </li>
+            </>
+          )}
+
           <li onClick={handleProfileClick} style={{ cursor: "pointer" }}>
             <FaUserCircle size={45} />
           </li>
@@ -72,7 +58,23 @@ function Navbar({ handleProfileClick }) {
   );
 }
 
-function Home() {
+// function Home() {
+//   return (
+//     <main className="hero">
+//       <div className="hero-content">
+//         <img src={logo} alt="AgriMart Main" className="main-logo" />
+//         <button className="shop-button">
+//           <FaShoppingCart className="shop-icon" />
+//           <span>
+//             <Link to="/customershop">Start Shopping</Link>
+//           </span>
+//         </button>
+//       </div>
+//     </main>
+//   );
+// }
+
+function Home({ userType }) {
   return (
     <main className="hero">
       <div className="hero-content">
@@ -80,13 +82,16 @@ function Home() {
         <button className="shop-button">
           <FaShoppingCart className="shop-icon" />
           <span>
-            <Link to="/customershop">Start Shopping</Link>
+            <Link to={userType === "admin" ? "/shop" : "/customershop"}>
+              {userType === "admin" ? "Manage Your Shop" : "Start Shopping"}
+            </Link>
           </span>
         </button>
       </div>
     </main>
   );
 }
+
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -112,13 +117,20 @@ function App() {
 
   return (
     <div className="app-container">
-      <Navbar handleProfileClick={handleProfileClick} />
+      <Navbar handleProfileClick={handleProfileClick} role={userData?.userType} />
 
       {/* Wrap your routes with CartProvider here */}
       <CartProvider>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/shop" element={<AdminShop />} />
+          <Route path="/" element={<Home userType={userData?.userType} />} />
+          <Route
+            path="/shop"
+            element={
+              userData?.userType === "admin"
+                ? <AdminShop />
+                : <CustomerShop />
+            }
+          />
           <Route path="/users" element={<Users />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/sales" element={<Sales />} />
