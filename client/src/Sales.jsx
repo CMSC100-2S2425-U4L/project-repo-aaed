@@ -3,17 +3,14 @@ import './Sales.css';
 import Sidebar from './Sidebar';
 import { useCart } from './CartContext';
 
-function Sales({ onSortChange }) {
+function Sales() {
   const { orders, products } = useCart();
   const [currentTab, setCurrentTab] = useState("weekly");
   const [salesData, setSalesData] = useState({ weekly: {}, monthly: {}, annual: {} });
 
   const handleSortChange = (sortOptions) => {
-    if (sortOptions.key === 'salesView') {
+    if(sortOptions.key === 'salesView' && ['weekly', 'monthly', 'annual'].includes(sortOptions.value)) {
       setCurrentTab(sortOptions.value);
-    }
-    if (onSortChange) {
-      onSortChange(sortOptions);
     }
   };
 
@@ -33,15 +30,15 @@ function Sales({ onSortChange }) {
     // Helper: filter orders by date range
     const categories = {
       weekly: {
-        filter: (dateStr) => new Date(dateStr) >= oneWeekAgo,
+        filter: (dateStr) => dateStr && new Date(dateStr) >= oneWeekAgo,
         data: {}
       },
       monthly: {
-        filter: (dateStr) => new Date(dateStr) >= oneMonthAgo,
+        filter: (dateStr) => dateStr && new Date(dateStr) >= oneMonthAgo,
         data: {}
       },
       annual: {
-        filter: (dateStr) => new Date(dateStr) >= oneYearAgo,
+        filter: (dateStr) => dateStr && new Date(dateStr) >= oneYearAgo,
         data: {}
       },
     };
@@ -50,27 +47,30 @@ function Sales({ onSortChange }) {
 
     // For each time range, process orders
     for (const [range, { filter }] of Object.entries(categories)) {
-      const filteredOrders = orders.filter(order => filter(order.dateOrdered));
+      const filteredOrders = orders.filter(order => order.orderStatus !== 2 && order.dateOrdered && filter(order.dateOrdered));
 
       const productMap = {};
       let totalSales = 0;
       let unitSales = 0;
 
       filteredOrders.forEach(order => {
-        totalSales += order.totalAmount;
-        order.items.forEach(item => {
-          const product = products[item.productId] || {};
-          const name = product.name || 'Unknown';
-          const price = product.price || 0;
+        totalSales += order.totalAmount || 0;
 
-          if (!productMap[name]) {
-            productMap[name] = { unitSold: 0, salesIncome: 0 };
-          }
+        if(order.items && Array.isArray(order.items)) {
+          order.items.forEach(item => {
+            const product = products[item.productId] || {};
+            const name = product.name || 'Unknown';
+            const price = product.price || 0;
 
-          productMap[name].unitSold += item.quantity;
-          productMap[name].salesIncome += item.quantity * price;
-          unitSales += item.quantity;
-        });
+            if (!productMap[name]) {
+              productMap[name] = { unitSold: 0, salesIncome: 0 };
+            }
+
+            productMap[name].unitSold += item.quantity;
+            productMap[name].salesIncome += item.quantity * price;
+            unitSales += item.quantity;
+          });
+        }
       });
 
       // Convert productMap to array and sort by salesIncome descending
