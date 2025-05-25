@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import './App.css'; // Reuse styles from modal
 import { useNavigate } from 'react-router-dom';
+import './Signup.css';
 
 function SignUp({ onClose, onCreateAccount }) {
 
@@ -8,17 +8,19 @@ function SignUp({ onClose, onCreateAccount }) {
 
   // Close signup page by going back to home (or any route)
   const handleOverlayClick = () => {
-    navigate('/');
+    navigate(-1); // Goes back to the previous page
   };
 
   // Prevent clicks inside the modal content from closing
   const handleContentClick = (e) => {
-    e.stopPropagation();
+    e.stopPropagation(); // Prevents modal close when clicking inside
   };
+
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    username: '',
+    email: '',
     password: '',
     confirmPassword: ''
   });
@@ -33,19 +35,18 @@ function SignUp({ onClose, onCreateAccount }) {
       alert("Passwords do not match!");
       return;
     }
-    // TODO: Add uniqueness check for username via backend
     onCreateAccount(formData);
     onClose();
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={e => e.stopPropagation()}>
+    <div className="modal-overlay" onClick={handleOverlayClick}>
+      <div className="modal-content" onClick={handleContentClick}>
         <h2 className="modal-heading">Create Account</h2>
         <form onSubmit={handleSubmit}>
           <input name="firstName" placeholder="First Name" required onChange={handleChange} />
           <input name="lastName" placeholder="Last Name" required onChange={handleChange} />
-          <input name="username" placeholder="Username" required onChange={handleChange} />
+          <input name="email" type="email" placeholder="Email" required onChange={handleChange} />
           <input name="password" type="password" placeholder="Password" required onChange={handleChange} />
           <input name="confirmPassword" type="password" placeholder="Confirm Password" required onChange={handleChange} />
           <button type="submit">Create Account</button>

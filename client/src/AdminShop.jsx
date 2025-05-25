@@ -1,7 +1,7 @@
 // import React, { useState } from 'react';
-import './AdminShop.css'; // You'll style sidebar, cards, modal here
-import ProductDetail from './ProductDetail'; // Adjust path if needed
-import ProductFormModal from './ProductFormModal'; // Adjust path as needed
+import './AdminShop.css';
+import ProductDetail from './ProductDetail';
+import ProductFormModal from './ProductFormModal';
 import Sidebar from './Sidebar';
 import axios from 'axios';
 const API_URL = import.meta.env.VITE_API_URL;
@@ -106,6 +106,5 @@ function AdminShop() {
     </div>
   );
 }
-
 
 export default AdminShop;

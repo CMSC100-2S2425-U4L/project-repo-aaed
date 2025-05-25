@@ -1,19 +1,21 @@
-import './App.css';
-import logo from './assets/logo.png';
-import { FaUserCircle, FaShoppingCart } from 'react-icons/fa';
-import React, { useState } from 'react';
-import { Routes, Route, Link, NavLink } from 'react-router-dom';
-import AdminShop from './AdminShop';
-import Users from './Users';
-import Orders from './Orders';
-import Sales from './Sales';
-import Dashboard from './Dashboard';
-import SignUp from './SignUp';
-import CustomerShop from './CustomerShop';
-import CustomerOrder from './CustomerOrder';
-import Cart from './Cart';
+import "./App.css";
+import logo from "./assets/logo.png";
+import { FaUserCircle, FaShoppingCart } from "react-icons/fa";
+import React, { useState } from "react";
+import { Routes, Route, Link, NavLink } from "react-router-dom";
+import AdminShop from "./AdminShop";
+import Users from "./Users";
+import Orders from "./Orders";
+import Sales from "./Sales";
+import Dashboard from "./Dashboard";
+import SignUp from "./SignUp";
+import CustomerShop from "./CustomerShop";
+import CustomerOrder from "./CustomerOrder";
+import SigninPage from "./SigninPage";
+import ProfilePage from "./ProfilePage";
+import Cart from "./Cart";
 
-import { CartProvider } from './CartContext';
+import { CartProvider } from "./CartContext";
 
 function Navbar({ handleProfileClick }) {
   return (
@@ -22,26 +24,46 @@ function Navbar({ handleProfileClick }) {
       <nav>
         <ul className="nav-links">
           <li>
-            <NavLink to="/" className={({ isActive }) => `nav-item ${isActive ? "active-tab" : ""}`}>
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                `nav-item ${isActive ? "active-tab" : ""}`
+              }
+            >
               Home
             </NavLink>
           </li>
           <li>
-            <NavLink to="/shop" className={({ isActive }) => `nav-item ${isActive ? "active-tab" : ""}`}>
+            <NavLink
+              to="/shop"
+              className={({ isActive }) =>
+                `nav-item ${isActive ? "active-tab" : ""}`
+              }
+            >
               Shop
             </NavLink>
           </li>
           <li>
-            <NavLink to="/cart" className={({ isActive }) => `nav-item ${isActive ? "active-tab" : ""}`}>
+            <NavLink
+              to="/cart"
+              className={({ isActive }) =>
+                `nav-item ${isActive ? "active-tab" : ""}`
+              }
+            >
               Cart
             </NavLink>
           </li>
           <li>
-            <NavLink to="/about" className={({ isActive }) => `nav-item ${isActive ? "active-tab" : ""}`}>
+            <NavLink
+              to="/about"
+              className={({ isActive }) =>
+                `nav-item ${isActive ? "active-tab" : ""}`
+              }
+            >
               About
             </NavLink>
           </li>
-          <li onClick={handleProfileClick} style={{ cursor: 'pointer' }}>
+          <li onClick={handleProfileClick} style={{ cursor: "pointer" }}>
             <FaUserCircle size={45} />
           </li>
         </ul>
@@ -57,7 +79,9 @@ function Home() {
         <img src={logo} alt="AgriMart Main" className="main-logo" />
         <button className="shop-button">
           <FaShoppingCart className="shop-icon" />
-          <span><Link to="/customershop">Start Shopping</Link></span>
+          <span>
+            <Link to="/customershop">Start Shopping</Link>
+          </span>
         </button>
       </div>
     </main>
@@ -67,12 +91,22 @@ function Home() {
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+  const [userData, setUserData] = useState(null);
+
+  // const handleProfileClick = () => {
+  //   if (!isLoggedIn) {
+  //     setShowModal(true);
+  //   } else {
+  //     // Logic for showing profile info if logged in
+  //   }
+  // };
 
   const handleProfileClick = () => {
     if (!isLoggedIn) {
       setShowModal(true);
     } else {
-      // Logic for showing profile info if logged in
+      setShowProfile(true);
     }
   };
 
@@ -93,31 +127,30 @@ function App() {
           <Route path="/customershop" element={<CustomerShop />} />
           <Route path="/customerorder" element={<CustomerOrder />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/profile" element={<ProfilePage />}/>
         </Routes>
       </CartProvider>
 
       {showModal && (
-        <div className="modal-overlay" onClick={() => setShowModal(false)}>
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <h2 className="modal-heading">Sign In</h2>
-            <form onSubmit={(e) => {
-              e.preventDefault();
-              setIsLoggedIn(true);
-              setShowModal(false);
-            }}>
-              <input type="email" placeholder="Email" required /><br />
-              <input type="password" placeholder="Password" required /><br />
-              <div className="signup-text">
-                Don’t have an account?{' '}
-                <Link to="/signup" className="create-link" onClick={() => setShowModal(false)}>
-                  Create one
-                </Link>
-              </div>
-              <button>Continue</button>
-            </form>
-          </div>
-        </div>
+        <SigninPage
+          setIsLoggedIn={setIsLoggedIn}
+          setShowModal={setShowModal}
+          setUserData={setUserData}
+        />
       )}
+
+      {showProfile && userData && (
+        <ProfilePage
+          userData={userData}
+          setShowProfile={setShowProfile}
+          setIsLoggedIn={setIsLoggedIn}
+          setUserData={setUserData}
+        />
+      )}
+
+
+
+
     </div>
   );
 }
