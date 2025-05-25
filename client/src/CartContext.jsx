@@ -69,8 +69,54 @@ export const CartProvider = ({ children }) => {
     setOrders(prev => [...prev, order]);
   }
 
+  const updateOrderStatus = (orderId, newStatus) => {
+    setOrders(prev =>
+      prev.map(order => {
+        if (order.id == orderId) {
+
+          if(newStatus == 2) { // if order is canceled
+
+            setCartItems(prevItems =>
+              prevItems.map(item => {
+                const orderItem =  order.items.find(i => i.productId == item.id);
+
+                if (orderItem) {
+                  return { ...item, stock: item.stock + orderItem.quantity,
+                    quantity: Math.min(item.quantity + orderItem.quantity, item.stock)};
+                }
+
+                return item;
+              })
+            );
+            
+            //update products
+            setProducts( prevProducts => {
+              const updatedProducts = { ...prevProducts };
+              order.items.forEach(item => {
+                if (updatedProducts[item.productId]) {
+                  updatedProducts[item.productId] = {
+                    ...updatedProducts[item.productId],
+                    quantity: updatedProducts[item.productId].quantity + item.quantity,
+                  };
+                }
+            });
+
+            return updatedProducts;
+          });
+          }
+
+          return { ...order, orderStatus: newStatus };
+        }
+
+        return order;
+      })
+    );
+
+    return true;
+  }
+
   return (
-    <CartContext.Provider value={{ cartItems, setCartItems, addToCart, orders, addOrder, products }}>
+    <CartContext.Provider value={{ cartItems, setCartItems, addToCart, orders, addOrder, products , updateOrderStatus}}>
       {children}
     </CartContext.Provider>
   );
