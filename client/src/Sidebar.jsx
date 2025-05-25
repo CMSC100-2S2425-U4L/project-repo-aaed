@@ -10,14 +10,18 @@ function Sidebar({ onSortChange }) {
   const [selectedSort, setSelectedSort] = useState({ key: '', direction: '' });
 
   const isSalesActive = location.pathname === '/sales';
-  const [isSalesExpanded, setIsSalesExpanded] = useState(false);
-  const [selectedSalesView, setSelectedSalesView] = useState('');
+  const [isSalesExpanded, setIsSalesExpanded] = useState(isSalesActive);
+  const [selectedSalesView, setSelectedSalesView] = useState('weekly');
 
   useEffect(() => {
+    setIsSalesExpanded(isSalesActive);
     if (isSalesActive) {
-      setIsSalesExpanded(true); // auto-expand on route change to /sales
+      if (isSalesActive && !selectedSalesView) {
+      setSelectedSalesView('weekly');
+      onSortChange({ key: 'salesView', value: 'weekly' });
     }
-  }, [isSalesActive])
+    }
+  }, [isSalesActive, onSortChange])
 
   useEffect(() => {
     if (isShopActive) {
