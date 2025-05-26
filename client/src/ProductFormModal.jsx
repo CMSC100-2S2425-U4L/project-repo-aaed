@@ -87,11 +87,12 @@ function ProductFormModal({ mode, product, onClose, onSave }) {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <h2>{isEdit ? 'Edit Product' : 'Add Product'}</h2>
+    <div className="product-modal-overlay" onClick={onClose}>
+      <div className="product-modal-content" onClick={(e) => e.stopPropagation()}> 
 
         <div className="image-upload">
+          <h2>{isEdit ? 'Edit Product' : 'Add Product'}</h2>
+
           {imagePreview ? (
             <div className="image-preview">
               <img src={imagePreview} alt="Preview" />
@@ -102,15 +103,58 @@ function ProductFormModal({ mode, product, onClose, onSave }) {
             </div>
           ) : (
             <label className="image-placeholder">
-              <FaPlus size={24} />
+              <FaPlus size={30} />
               <span>Add a photo</span>
               <input type="file" accept="image/*" onChange={handleImageChange} hidden />
             </label>
           )}
+
+          <input
+            type="text"
+            placeholder="Product Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="product-input-field"
+          />
         </div>
 
-        <div className="form-fields-container">
+        <div className="product-form-fields-container">
+
+          <h3>Add Description</h3>
+          
+          <textarea
+            placeholder="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="product-input-field"
+            minLength={1}
+            maxLength={15}
+            required
+          /> 
+          
+          <h3>Set Price and Quantity</h3>
+          <div className="product-price-quantity-container">
+            <input
+              type="number"
+              placeholder="Price"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              className="product-input-field"
+              required
+            />
+
+            <input
+              type="number"
+              placeholder="Quantity"
+              value={stock}
+              onChange={(e) => setStock(e.target.value)}
+              className="product-input-field"
+              required
+            />
+          </div>
+
           <div className="product-type-selection">
+
             <label className="type-label">Product Type:</label>
             <div className="radio-group">
               <label className="radio-label">
@@ -135,62 +179,15 @@ function ProductFormModal({ mode, product, onClose, onSave }) {
               </label>
             </div>
           </div>
+        
+          <button
+            onClick={handleSubmit}
+            className="product-submit-button"
+          >
+            Save
+          </button>
 
-          <input
-            type="text"
-            placeholder="Product Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="input-field"
-          />
-          <textarea
-            placeholder="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="input-field"
-            minLength={1}
-            maxLength={15}
-            required
-          />
-          <input
-            type="number"
-            placeholder="Price"
-            value={price}
-            onChange={e => setPrice(e.target.value)}
-            onInput={e => {
-              e.target.value = e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
-            }}
-            className="input-field"
-            min={0}
-            step="any"
-            inputMode="decimal"
-            pattern="^\d*\.?\d*$"
-            required
-          />
-          <input
-            type="number"
-            placeholder="Stock"
-            value={stock}
-            onChange={e => setStock(e.target.value)}
-            onInput={e => {
-              // Remove non-numeric characters
-              e.target.value = e.target.value.replace(/[^0-9]/g, '');
-            }}
-            className="input-field"
-            min={0}
-            step={1}
-            inputMode="numeric"
-            pattern="^\d*$"
-            required
-          />
         </div>
-
-        <button
-          onClick={handleSubmit}
-          className="submit-button"
-        >
-          Save
-        </button>
       </div>
     </div>
   );
