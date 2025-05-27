@@ -3,7 +3,7 @@
 **Group Name:** AAED <br/>
 **Section:** U-4L <br/>
 **Members:** <br/>
- Adrian Jericho Javier
+ Adrian Jericho Javier <br/>
  Djeana Carel Briones <br/>
  Angeline Cubelo <br/>
  Elisha Julianne Claveria <br/>
