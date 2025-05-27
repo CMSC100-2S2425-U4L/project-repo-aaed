@@ -88,7 +88,7 @@ function ProductFormModal({ mode, product, onClose, onSave }) {
 
   return (
     <div className="product-modal-overlay" onClick={onClose}>
-      <div className="product-modal-content" onClick={(e) => e.stopPropagation()}> 
+      <div className="product-modal-content" onClick={(e) => e.stopPropagation()}>
 
         <div className="image-upload">
           <h2>{isEdit ? 'Edit Product' : 'Add Product'}</h2>
@@ -121,7 +121,7 @@ function ProductFormModal({ mode, product, onClose, onSave }) {
         <div className="product-form-fields-container">
 
           <h3>Add Description</h3>
-          
+
           <textarea
             placeholder="Description"
             value={description}
@@ -130,8 +130,8 @@ function ProductFormModal({ mode, product, onClose, onSave }) {
             minLength={1}
             maxLength={15}
             required
-          /> 
-          
+          />
+
           <h3>Set Price and Quantity</h3>
           <div className="product-price-quantity-container">
             <input
@@ -179,7 +179,7 @@ function ProductFormModal({ mode, product, onClose, onSave }) {
               </label>
             </div>
           </div>
-        
+
           <button
             onClick={handleSubmit}
             className="product-submit-button"

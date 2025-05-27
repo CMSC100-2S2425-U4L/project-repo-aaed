@@ -17,9 +17,9 @@ const CustomerProductDetail = ({ product, onClose, onAddToCart }) => {
   if (!product) return null;
 
   const handleAddToCart = () => {
-  const normalizedProduct = normalizeProduct(product);
-  onAddToCart(normalizedProduct, quantity);
-  onClose();
+    const normalizedProduct = normalizeProduct(product);
+    onAddToCart(normalizedProduct, quantity);
+    onClose();
   };
 
   return (
@@ -43,9 +43,9 @@ const CustomerProductDetail = ({ product, onClose, onAddToCart }) => {
       <div className="quantity-wrapper">
         <label className="quantity-label">Quantity:</label>
         <div className="quantity-control">
-            <button onClick={() => setQuantity((q) => Math.max(1, q - 1))}>−</button>
-            <input type="number" value={quantity} readOnly />
-            <button onClick={() => setQuantity((q) => Math.min(product.productQuantity, q + 1))}>+</button>
+          <button onClick={() => setQuantity((q) => Math.max(1, q - 1))}>−</button>
+          <input type="number" value={quantity} readOnly />
+          <button onClick={() => setQuantity((q) => Math.min(product.productQuantity, q + 1))}>+</button>
         </div>
       </div>
       <div className="detail-actions">
