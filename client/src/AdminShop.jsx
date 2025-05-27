@@ -59,10 +59,9 @@ function AdminShop() {
   };
 
   return (
-    <div className="admin-shop-container">
+    <div className="admin-shop-container" style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 90px)' }}>
       <Sidebar onSortChange={setSortOption} />
-      {console.log(sortOption)}
-      <main className="product-panel">
+      <main className="product-panel" style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 90px)' }}>
         <button className="add-product-btn" onClick={() => setIsModalOpen(true)}>+ Add a Product</button>
 
         <div className="product-grid">

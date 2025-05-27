@@ -1,8 +1,8 @@
 import "./App.css";
 import logo from "./assets/logo.png";
 import { FaUserCircle, FaShoppingCart } from "react-icons/fa";
-import React, { useState } from "react";
-import { Routes, Route, Link, NavLink } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { Routes, Route, Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import AdminShop from "./AdminShop";
 import Users from "./Users";
 import Orders from "./Orders";
@@ -14,10 +14,12 @@ import CustomerOrder from "./CustomerOrder";
 import SigninPage from "./SigninPage";
 import ProfilePage from "./ProfilePage";
 import Cart from "./Cart";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { CartProvider } from "./CartContext";
 
-function Navbar({ handleProfileClick, role }) {
+function Navbar({ handleProfileClick, role, handleLogout, isLoggedIn }) {
   return (
     <header className="navbar">
       <img src={logo} alt="AgriMart Logo" className="logo" />
@@ -94,18 +96,22 @@ function Home({ userType }) {
 
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem('isLoggedIn') === 'true');
   const [showModal, setShowModal] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
-  const [userData, setUserData] = useState(null);
-
-  // const handleProfileClick = () => {
-  //   if (!isLoggedIn) {
-  //     setShowModal(true);
-  //   } else {
-  //     // Logic for showing profile info if logged in
-  //   }
-  // };
+  const [userData, setUserData] = useState(() => {
+    // Restore user info from localStorage on app load
+    const userType = localStorage.getItem('userType');
+    const email = localStorage.getItem('email');
+    const firstName = localStorage.getItem('firstName');
+    const lastName = localStorage.getItem('lastName');
+    return userType && email && firstName && lastName
+      ? { userType, email, firstName, lastName }
+      : null;
+  });
+  const location = useLocation();
+  const navigate = useNavigate();
+  const hasRedirected = useRef(false);
 
   const handleProfileClick = () => {
     if (!isLoggedIn) {
@@ -115,11 +121,52 @@ function App() {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.setItem('isLoggedIn', 'false');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userType');
+    localStorage.removeItem('email');
+    localStorage.removeItem('firstName');
+    localStorage.removeItem('lastName');
+    setIsLoggedIn(false);
+    setUserData(null);
+    setShowProfile(false);
+    toast.success('Logged out successfully!');
+    window.location.href = '/';
+  };
+
+  useEffect(() => {
+    const showModalListener = () => setShowModal(true);
+    window.addEventListener('show-signin-modal', showModalListener);
+    return () => window.removeEventListener('show-signin-modal', showModalListener);
+  }, []);
+
+  // Keep userData in sync with localStorage (for login)
+  useEffect(() => {
+    if (isLoggedIn && userData) {
+      localStorage.setItem('userType', userData.userType);
+      localStorage.setItem('email', userData.email);
+      localStorage.setItem('firstName', userData.firstName);
+      localStorage.setItem('lastName', userData.lastName);
+    }
+  }, [isLoggedIn, userData]);
+
+  useEffect(() => {
+    if (isLoggedIn && userData?.userType) {
+      // If on /shop but not admin, redirect to /customershop
+      if (location.pathname === "/shop" && userData.userType !== "admin") {
+        navigate("/customershop", { replace: true });
+      }
+      // If on /customershop but admin, redirect to /shop
+      if (location.pathname === "/customershop" && userData.userType === "admin") {
+        navigate("/shop", { replace: true });
+      }
+    }
+  }, [isLoggedIn, userData, location.pathname, navigate]);
+
   return (
     <div className="app-container">
-      <Navbar handleProfileClick={handleProfileClick} role={userData?.userType} />
-
-      {/* Wrap your routes with CartProvider here */}
+      <Navbar handleProfileClick={handleProfileClick} role={userData?.userType} handleLogout={handleLogout} isLoggedIn={isLoggedIn} />
       <CartProvider>
         <Routes>
           <Route path="/" element={<Home userType={userData?.userType} />} />
@@ -139,10 +186,10 @@ function App() {
           <Route path="/customershop" element={<CustomerShop />} />
           <Route path="/customerorder" element={<CustomerOrder />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/profile" element={<ProfilePage />}/>
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/signin" element={<SigninPage setIsLoggedIn={setIsLoggedIn} setShowModal={setShowModal} setUserData={setUserData} />} />
         </Routes>
       </CartProvider>
-
       {showModal && (
         <SigninPage
           setIsLoggedIn={setIsLoggedIn}
@@ -150,7 +197,6 @@ function App() {
           setUserData={setUserData}
         />
       )}
-
       {showProfile && userData && (
         <ProfilePage
           userData={userData}
@@ -159,10 +205,7 @@ function App() {
           setUserData={setUserData}
         />
       )}
-
-
-
-
+      <ToastContainer position="top-center" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick pauseOnFocusLoss draggable pauseOnHover />
     </div>
   );
 }

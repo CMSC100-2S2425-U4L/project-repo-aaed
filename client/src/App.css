@@ -1,4 +1,6 @@
-body, html, #root {
+body,
+html,
+#root {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -127,4 +129,22 @@ body, html, #root {
 
 .shop-button:hover {
   background-color: #f0fdf4;
+}
+
+.themed-btn,
+.logout-btn {
+  background-color: #bfa21d;
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.2s;
+  margin-left: 10px;
+}
+
+.themed-btn:hover,
+.logout-btn:hover {
+  background-color: #a08a1a;
 }

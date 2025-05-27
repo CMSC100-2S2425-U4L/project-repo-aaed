@@ -17,9 +17,9 @@ function Sidebar({ onSortChange }) {
     setIsSalesExpanded(isSalesActive);
     if (isSalesActive) {
       if (isSalesActive && !selectedSalesView) {
-      setSelectedSalesView('weekly');
-      onSortChange({ key: 'salesView', value: 'weekly' });
-    }
+        setSelectedSalesView('weekly');
+        onSortChange({ key: 'salesView', value: 'weekly' });
+      }
     }
   }, [isSalesActive, onSortChange])
 
@@ -51,18 +51,15 @@ function Sidebar({ onSortChange }) {
             </NavLink>
           </li>
           <li>
-            <div
-              className={`sidebar-link ${isShopActive ? "active" : ""}`}
-              onClick={() => {
-                setIsProductExpanded(prev => !prev);
-              }}
-              style={{ cursor: 'pointer' }}
+            <NavLink
+              to="/shop"
+              className={({ isActive }) => `sidebar-link ${isActive ? "active" : ""}`}
+              onClick={() => setIsProductExpanded(true)}
             >
               <FaBox className="sidebar-icon" />
-              <NavLink to="/shop" className="sidebar-link-text">Products</NavLink>
-            </div>
-
-            {isProductExpanded && (
+              <span className="sidebar-link-text">Products</span>
+            </NavLink>
+            {isShopActive && isProductExpanded && (
               <div className="sort-options">
                 <p className="sort-label">Sort by:</p>
                 {[
@@ -122,7 +119,6 @@ function Sidebar({ onSortChange }) {
                     )}
                   </div>
                 ))}
-
               </div>
             )}
           </li>
@@ -137,17 +133,15 @@ function Sidebar({ onSortChange }) {
             </NavLink>
           </li>
           <li>
-            <div 
-              className={`sidebar-link ${isSalesActive ? "active" : ""}`}
-              onClick={() => {
-                setIsSalesExpanded(prev => !prev);
-              }}
-              style={{ cursor: 'pointer' }}
-            > 
-              <FaBox className="sidebar-icon" />
-              <NavLink to="/sales" className={({ isActive }) => `sidebar-link-text ${isActive ? "active" : ""}`}>Sales</NavLink>
-            </div>
-            {isSalesExpanded && (
+            <NavLink
+              to="/sales"
+              className={({ isActive }) => `sidebar-link ${isActive ? "active" : ""}`}
+              onClick={() => setIsSalesExpanded(true)}
+            >
+              <FaChartBar className="sidebar-icon" />
+              <span className="sidebar-link-text">Sales</span>
+            </NavLink>
+            {isSalesActive && isSalesExpanded && (
               <div className="view-options">
                 <p className="view-label">View by:</p>
                 <div className="view-column">
