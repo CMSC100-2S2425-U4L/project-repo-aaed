@@ -5,7 +5,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL; // Adjust if needed
+// Adjust if needed
+const API_URL = import.meta.env.VITE_API_URL; 
 
 const Cart = () => {
   const { cartItems, setCartItems, addOrder } = useCart();

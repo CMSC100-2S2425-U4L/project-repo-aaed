@@ -60,22 +60,6 @@ function Navbar({ handleProfileClick, role, handleLogout, isLoggedIn }) {
   );
 }
 
-// function Home() {
-//   return (
-//     <main className="hero">
-//       <div className="hero-content">
-//         <img src={logo} alt="AgriMart Main" className="main-logo" />
-//         <button className="shop-button">
-//           <FaShoppingCart className="shop-icon" />
-//           <span>
-//             <Link to="/customershop">Start Shopping</Link>
-//           </span>
-//         </button>
-//       </div>
-//     </main>
-//   );
-// }
-
 function Home({ userType }) {
   return (
     <main className="hero">
