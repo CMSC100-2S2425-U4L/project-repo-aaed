@@ -1,40 +1,63 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { jwtDecode } from "jwt-decode";
 import './SigninPage.css';
 
 function SigninPage({ setIsLoggedIn, setShowModal, setUserData }) {
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const email = e.target[0].value;
-
-    let dummyUser;
-
-    if (email === "admin@example.com") {
-        dummyUser = {
-        firstName: "Admin",
-        middleName: "",
-        lastName: "User",
-        email,
-        userType: "admin",
-        };
-    } else {
-        dummyUser = {
-        firstName: "Jane",
-        middleName: "C.",
-        lastName: "Doe",
-        email,
-        userType: "customer",
-        };
+    const password = e.target[1].value;
+    if (!email.includes('@')) {
+      toast.error('Please enter a valid email address.');
+      return;
     }
-
-    setUserData(dummyUser);
-    setIsLoggedIn(true);
-    setShowModal(false);
-
-    navigate("/profile");
-    };
+    if (!password) {
+      toast.error('Password is required.');
+      return;
+    }
+    try {
+      const response = await axios.post('http://localhost:3000/auth/login', { email, password });
+      const data = response.data;
+      if (response.status === 200 && data.token) {
+        setIsLoggedIn(true);
+        localStorage.setItem('isLoggedIn', 'true');
+        // Decode token to get user info
+        const decoded = jwtDecode(data.token);
+        localStorage.setItem('userId', decoded._id);
+        // Store user info for session persistence
+        localStorage.setItem('userType', data.userType);
+        localStorage.setItem('email', data.email);
+        localStorage.setItem('firstName', data.firstName);
+        localStorage.setItem('lastName', data.lastName);
+        setShowModal(false);
+        setUserData({
+          email: data.email,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          userType: data.userType
+        });
+        toast.success('Login successful!');
+        if (data.userType === 'admin') {
+          navigate('/shop');
+        } else {
+          navigate('/customershop');
+        }
+      } else {
+        toast.error(data.message || 'Login failed.');
+      }
+    } catch (err) {
+      if (err.response && err.response.data && err.response.data.message) {
+        toast.error(err.response.data.message);
+      } else {
+        toast.error('Server error. Please try again later.');
+      }
+    }
+  };
 
   return (
     <div className="modal-overlay" onClick={() => setShowModal(false)}>

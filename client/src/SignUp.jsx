@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Signup.css';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
-function SignUp({ onClose, onCreateAccount }) {
-
-    const navigate = useNavigate();
+function SignUp({ onClose }) {
+  const navigate = useNavigate();
 
   // Close signup page by going back to home (or any route)
   const handleOverlayClick = () => {
@@ -15,7 +16,6 @@ function SignUp({ onClose, onCreateAccount }) {
   const handleContentClick = (e) => {
     e.stopPropagation(); // Prevents modal close when clicking inside
   };
-
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -29,14 +29,30 @@ function SignUp({ onClose, onCreateAccount }) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+    if (!formData.email.includes('@')) {
+      toast.error('Please enter a valid email address.');
       return;
     }
-    onCreateAccount(formData);
-    onClose();
+    if (formData.password !== formData.confirmPassword) {
+      toast.error('Passwords do not match!');
+      return;
+    }
+    try {
+      await axios.post('http://localhost:3000/auth/register', {
+        ...formData,
+        userType: 'customer'
+      });
+      toast.success('Account created successfully!');
+      if (onClose) onClose();
+    } catch (err) {
+      if (err.response && err.response.data && err.response.data.error) {
+        toast.error(err.response.data.error);
+      } else {
+        toast.error('Server error. Please try again later.');
+      }
+    }
   };
 
   return (

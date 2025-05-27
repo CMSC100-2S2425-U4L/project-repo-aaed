@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './Cart.css';
 import { useCart } from './CartContext';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_URL; // Adjust if needed
 
 const Cart = () => {
-  const { cartItems, setCartItems, addOrder} = useCart();
+  const { cartItems, setCartItems, addOrder } = useCart();
   const isCartFull = cartItems.every(item => item.quantity >= item.stock);  //check if cart is full
 
   const [quantities, setQuantities] = useState(() =>
@@ -95,27 +100,52 @@ const Cart = () => {
     0
   );
 
-  const handleCheckout = () => {
-    if(checkedCartItems.length === 0) return;
+  const handleCheckout = async () => {
+    if (checkedCartItems.length === 0) return;
 
-    const order = {
-      id: new Date().getTime(), //sample ID for now
-      items: checkedCartItems.map(item => ({
+    const userId = localStorage.getItem('userId');
+    console.log('User ID:', userId);
+    if (!userId) {
+      toast.error('User not found. Please sign in again.');
+      return;
+    }
+
+    let allSuccess = true;
+    let errorCount = 0;
+    for (const item of checkedCartItems) {
+      const order = {
         productId: item.id,
         quantity: item.quantity || 1,
-      })),
-      orderStatus: 0,
-      email: 'sample@email.com',
-      dateOrdered: new Date(),
-      time: new Date().toLocaleTimeString(),
-      totalAmount: subtotal,
-    };
+        user_id: userId,
+        time: new Date().toLocaleTimeString(),
+        totalAmount: (item.price * (item.quantity || 1)),
+      };
+      console.log('Item id:', item.id);
+      try {
+        const res = await axios.post(`${API_URL}/orders/add`, order);
+        const data = res.data;
+        if (res.status === 201 && data.inserted) {
+          addOrder(data.order);
+        } else {
+          allSuccess = false;
+          errorCount++;
+          toast.error(`Order for ${item.name} failed: ${data.message || 'Unknown error'}`);
+        }
+      } catch (err) {
+        allSuccess = false;
+        errorCount++;
+        toast.error(`Order for ${item.name} failed: ${err.response?.data?.message || err.message}`);
+      }
+    }
 
-    addOrder(order);
     setCartItems(prev => prev.filter(item => !checkedItems.has(item.id)));
     setCheckedItems(new Set());
 
-    alert('Order placed successfully!');
+    if (allSuccess) {
+      toast.success('All orders placed successfully!');
+    } else if (errorCount > 0 && errorCount < checkedCartItems.length) {
+      toast.warn('Some orders failed. Please check your cart.');
+    }
   };
 
 
@@ -133,10 +163,10 @@ const Cart = () => {
               <div className="quantity-controls">
                 <button onClick={() => handleQuantityChange(item.id, -1)}>-</button>
                 <span>{quantities[item.id]}</span>
-                <button onClick={() => 
+                <button onClick={() =>
                   handleQuantityChange(item.id, 1)}
                   disabled={item.quantity >= item.stock}  //disable button if stock is full
-                  >+
+                >+
                 </button>
               </div>
               <div className="product-price">

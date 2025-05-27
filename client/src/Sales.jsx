@@ -1,88 +1,89 @@
 import React, { useState, useEffect } from 'react';
 import './Sales.css';
 import Sidebar from './Sidebar';
-import { useCart } from './CartContext';
+import axios from 'axios';
 
 function Sales() {
-  const { orders, products } = useCart();
+  const [orders, setOrders] = useState([]);
+  const [products, setProducts] = useState({});
   const [currentTab, setCurrentTab] = useState("weekly");
   const [salesData, setSalesData] = useState({ weekly: {}, monthly: {}, annual: {} });
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleSortChange = (sortOptions) => {
-    if(sortOptions.key === 'salesView' && ['weekly', 'monthly', 'annual'].includes(sortOptions.value)) {
+    if (sortOptions.key === 'salesView' && ['weekly', 'monthly', 'annual'].includes(sortOptions.value)) {
       setCurrentTab(sortOptions.value);
     }
   };
 
   useEffect(() => {
-    const now = new Date();
+    // Fetch orders and products from backend
+    const fetchOrdersAndProducts = async () => {
+      try {
+        const [ordersRes, productsRes] = await Promise.all([
+          axios.get(`${API_URL}/orders?populate=productId`),
+          axios.get(`${API_URL}/product/`)
+        ]);
+        setOrders(ordersRes.data);
+        // Map products by _id for fast lookup
+        const productMap = {};
+        productsRes.data.forEach(p => {
+          productMap[p._id] = p;
+        });
+        setProducts(productMap);
+      } catch (err) {
+        setOrders([]);
+        setProducts({});
+      }
+    };
+    fetchOrdersAndProducts();
+  }, [API_URL]);
 
-    // Calculate date boundaries for weekly, monthly, and annual
+  useEffect(() => {
+    const now = new Date();
     const oneWeekAgo = new Date(now);
     oneWeekAgo.setDate(now.getDate() - 7);
-
     const oneMonthAgo = new Date(now);
     oneMonthAgo.setMonth(now.getMonth() - 1);
-
     const oneYearAgo = new Date(now);
     oneYearAgo.setFullYear(now.getFullYear() - 1);
 
-    // Helper: filter orders by date range
     const categories = {
       weekly: {
         filter: (dateStr) => dateStr && new Date(dateStr) >= oneWeekAgo,
-        data: {}
       },
       monthly: {
         filter: (dateStr) => dateStr && new Date(dateStr) >= oneMonthAgo,
-        data: {}
       },
       annual: {
         filter: (dateStr) => dateStr && new Date(dateStr) >= oneYearAgo,
-        data: {}
       },
     };
 
     const computedData = {};
-
-    // For each time range, process orders
     for (const [range, { filter }] of Object.entries(categories)) {
-      const filteredOrders = orders.filter(order => order.orderStatus !== 2 && order.dateOrdered && filter(order.dateOrdered));
-
+      const filteredOrders = orders.filter(order => order.orderStatus === 1 && order.dateOrdered && filter(order.dateOrdered));
       const productMap = {};
       let totalSales = 0;
       let unitSales = 0;
-
       filteredOrders.forEach(order => {
-        totalSales += order.totalAmount || 0;
-
-        if(order.items && Array.isArray(order.items)) {
-          order.items.forEach(item => {
-            const product = products[item.productId] || {};
-            const name = product.name || 'Unknown';
-            const price = product.price || 0;
-
-            if (!productMap[name]) {
-              productMap[name] = { unitSold: 0, salesIncome: 0 };
-            }
-
-            productMap[name].unitSold += item.quantity;
-            productMap[name].salesIncome += item.quantity * price;
-            unitSales += item.quantity;
-          });
+        const product = products[order.productId?._id] || order.productId || {};
+        const name = product.productName || product.name || 'Unknown';
+        const price = product.productPrice || product.price || 0;
+        if (!productMap[name]) {
+          productMap[name] = { unitSold: 0, salesIncome: 0 };
         }
+        productMap[name].unitSold += order.quantity;
+        productMap[name].salesIncome += order.totalAmount || (order.quantity * price);
+        unitSales += order.quantity;
+        totalSales += order.totalAmount || (order.quantity * price);
       });
-
-      // Convert productMap to array and sort by salesIncome descending
       const productsSold = Object.entries(productMap)
         .map(([name, stats]) => ({ name, ...stats }))
         .sort((a, b) => b.salesIncome - a.salesIncome);
-
       computedData[range] = { totalSales, unitSales, productsSold };
     }
-
     setSalesData(computedData);
-
   }, [orders, products]);
 
   const currentTabData = {
@@ -105,7 +106,6 @@ function Sales() {
             <h3>{currentTabData.unitSales}</h3>
           </div>
         </div>
-
         <div className="sales-table">
           <table>
             <thead>
@@ -120,7 +120,6 @@ function Sales() {
                 <tr key={index}>
                   <td>{product.name}</td>
                   <td>{product.unitSold}</td>
-                  {/* <td>Php {product.salesIncome.toFixed(2)}</td> */}
                   <td>Php {(typeof product.salesIncome === 'number' ? product.salesIncome : 0).toFixed(2)}</td>
                 </tr>
               ))}
