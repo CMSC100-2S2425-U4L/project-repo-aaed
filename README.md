@@ -23,7 +23,7 @@
 • User management where merchant can see registered users <br/>
 • Product inventory where merchant can manage products <br/>
 • Order fulfillment where merchant can confirm customer's orders <br/>
-• Sales reports where merchant can see the sales (all, weekly, monthly, yearly) <br/>
+• Sales reports where merchant can see the sales <br/>
 
 ### SCREENSHOTS <br/>
 
@@ -47,7 +47,7 @@ This project uses a MERN stack (MongoDB, Express.js, React.js, Node.js).
 To run it, you'll need Node.js, npm (Node Package Manager), and MongoDB installed on your system. <br/>
 
 1. Create a .env file in the /server directory and paste the following content: <br/>
-    PORT = "3000" <lbr/>
+    PORT = "3000" <br/>
     MONGODB_URI = "mongodb+srv://general:GeMdMDvJCkvygYAr@cmsc100.w1o9lky.mongodb.net/" <br/>
     JWT_SECRET=iPWk9riV8Z <br/>
 
