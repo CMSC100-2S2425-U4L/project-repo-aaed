@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import authRoute from "./src/routes/authRoute.js";
 import productRoute from "./src/routes/productRoute.js";
+import orderRoute from "./src/routes/orderRoute.js";
 import path from "path";
 import mongoose from "mongoose";
 import { GridFSBucket } from "mongodb";
@@ -21,6 +22,7 @@ app.use(express.json());
 //routes
 app.use('/auth', authRoute);
 app.use('/product', productRoute);
+app.use('/orders', orderRoute);
 
 app.get("/", (req, res) => {
     res.send("Server is running!");

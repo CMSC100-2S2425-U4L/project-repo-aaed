@@ -7,60 +7,41 @@ import validator from 'validator';
 export const saveOrder = async (req, res) => {
     const session = await mongoose.startSession();
     session.startTransaction();
-    
     try {
         // Get order details
-        const { items, email, time, totalAmount } = req.body;
+        const { productId, quantity, user_id, time, totalAmount } = req.body;
 
         // All required fields
-        if (!items || !email || !time || !totalAmount) {
+        if (!productId || !user_id || !time || !totalAmount || !quantity) {
             await session.abortTransaction();
             return res.status(400).json({ inserted: false, message: "Missing fields" });
         }
 
-        // Validate email format
-        if (!validator.isEmail(email)) {
+        // Validate quantity
+        if (quantity <= 0) {
             await session.abortTransaction();
-            return res.status(400).json({ inserted: false, message: "Invalid email format!" });
+            return res.status(400).json({ inserted: false, message: "Invalid quantity" });
         }
 
-        // Validate items array
-        if (!Array.isArray(items) || items.length === 0) {
+        // Check product existence (but do not deduct stock yet)
+        const product = await Product.findById(productId).session(session);
+        if (!product) {
             await session.abortTransaction();
-            return res.status(400).json({ inserted: false, message: "Items must be a non-empty array!" });
+            return res.status(400).json({ inserted: false, message: `Product with ID ${productId} not found` });
         }
+        // Do not check for stock or deduct here
 
-        // Check product availability and validate quantities
-        for (const item of items) {
-            const product = await Product.findById(item.productId).session(session);
-            if (!product) {
-                await session.abortTransaction();
-                return res.status(400).json({ 
-                    inserted: false, 
-                    message: `Product with ID ${item.productId} not found` 
-                });
-            }
-            if (item.quantity <= 0 || item.quantity > product.productQuantity) {
-                await session.abortTransaction();
-                return res.status(400).json({ 
-                    inserted: false, 
-                    message: `Invalid quantity for product ${product.productName}` 
-                });
-            }
-        }
-
-        // Create new order (status defaults = 0; pending sya)
-        const newOrder = new Order({ 
-            items, 
-            email, 
-            time, 
-            totalAmount 
+        // Create new order
+        const newOrder = new Order({
+            productId,
+            quantity,
+            user_id,
+            time,
+            totalAmount
         });
-
         await newOrder.save({ session });
         await session.commitTransaction();
         res.status(201).json({ inserted: true, order: newOrder });
-
     } catch (e) {
         await session.abortTransaction();
         console.error('Order failed!:', e);
@@ -70,93 +51,57 @@ export const saveOrder = async (req, res) => {
     }
 };
 
-// Get order by ID 
-export const getOrder = async (req, res) => {
-    try {
-        const { id } = req.params;
-
-        if (!id) {
-            return res.status(400).json({ message: "No order ID provided" });
-        }
-
-        const order = await Order.findById(id).populate('items.productId').populate('email');
-
-        if (order) {
-            res.json(order);
-        } else {
-            res.status(404).json({ message: "Order not found" });
-        }
-    } catch (e) {
-        console.error(e);
-        res.status(500).json({ message: "Server Error" });
-    }
-};
-
-// Get orders by email 
-export const getOrdersByEmail = async (req, res) => {
-    try {
-        const { email } = req.query;
-
-        if (!email) {
-            return res.status(400).json({ message: "No email provided" });
-        }
-
-        // Validate email format
-        if (!validator.isEmail(email)) {
-            return res.status(400).json({ message: "Invalid email format" });
-        }
-
-        const orders = await Order.find({ email }).populate('items.productId').sort({ dateOrdered: -1 });
-
-        if (orders.length > 0) {
-            res.json(orders);
-        } else {
-            res.status(404).json({ message: "No orders found for this email!" });
-        }
-    } catch (e) {
-        console.error(e);
-        res.status(500).json({ message: "Server Error" });
-    }
-};
-
 // Update order status 
 export const updateOrderStatus = async (req, res) => {
     const session = await mongoose.startSession();
     session.startTransaction();
-
     try {
         const { id } = req.params;
         const { orderStatus } = req.body;
 
         if (!id || (orderStatus !== 0 && orderStatus !== 1 && orderStatus !== 2)) {
             await session.abortTransaction();
-            return res.status(400).json({ 
-                updated: false, 
-                message: "Missing order ID or invalid status" 
+            return res.status(400).json({
+                updated: false,
+                message: "Missing order ID or invalid status"
             });
         }
 
-        const order = await Order.findById(id).populate('items.productId').session(session);
-
+        // Find the order to approve
+        const order = await Order.findById(id).session(session);
         if (!order) {
             await session.abortTransaction();
             return res.status(404).json({ updated: false, message: "Order not found!" });
         }
 
-        // If changing from pending (0) to confirmed (1), update product quantities
+        // Only check/deduct stock if approving (pending -> confirmed)
         if (order.orderStatus === 0 && orderStatus === 1) {
-            for (const item of order.items) {
-                const product = item.productId;
-                if (product.productQuantity < item.quantity) {
-                    await session.abortTransaction();
-                    return res.status(400).json({ 
-                        updated: false, 
-                        message: `Insufficient quantity for product ${product.productName}` 
-                    });
-                }
-                product.productQuantity -= item.quantity;
-                await product.save({ session });
+            // Get the product
+            const product = await Product.findById(order.productId).session(session);
+            if (!product) {
+                await session.abortTransaction();
+                return res.status(404).json({ updated: false, message: "Product not found!" });
             }
+
+            // Calculate total reserved (pending) quantity for this product, excluding this order
+            const pendingOrders = await Order.find({
+                productId: order.productId,
+                orderStatus: 0,
+                _id: { $ne: order._id }
+            }).session(session);
+            const reservedQty = pendingOrders.reduce((sum, o) => sum + o.quantity, 0);
+            const availableQty = product.productQuantity - reservedQty;
+
+            if (order.quantity > availableQty) {
+                // Remove this order and abort
+                await Order.deleteOne({ _id: order._id }, { session });
+                await session.commitTransaction();
+                return res.status(400).json({ updated: false, message: "Order removed: not enough stock left after other pending orders were approved." });
+            }
+
+            // Deduct stock
+            product.productQuantity -= order.quantity;
+            await product.save({ session });
         }
 
         // Update order status
@@ -177,7 +122,7 @@ export const updateOrderStatus = async (req, res) => {
 // Get all orders 
 export const getAllOrders = async (req, res) => {
     try {
-        const { sortKey, sortDirection, orderStatus, email } = req.query;
+        const { sortKey, sortDirection, orderStatus, email, user_id, populate } = req.query;
         let filter = {};
         let sort = { dateOrdered: -1 }; // Default sort by newest first
 
@@ -190,21 +135,50 @@ export const getAllOrders = async (req, res) => {
         if (email) {
             filter.email = email;
         }
-  
+
+        // Filter by user_id if meron
+        if (user_id) {
+            filter.user_id = user_id;
+        }
+
         // Custom sorting if meron
         if (sortKey && sortDirection) {
             sort = { [sortKey]: sortDirection === 'asc' ? 1 : -1 };
         }
 
-        const orders = await Order.find(filter)
-            .populate('items.productId')
-            .populate('email')
-            .sort(sort);
-
+        let query = Order.find(filter).sort(sort);
+        // Fix: Only call populate if the field exists in the schema and the param is present
+        if (populate && populate === 'productId') {
+            query = query.populate('productId');
+        }
+        const orders = await query;
         res.json(orders);
     } catch (e) {
         console.error(e);
         res.status(500).json({ error: "Failed to fetch orders" });
+    }
+};
+
+// Get orders by user ID (not email)
+export const getOrdersByUser = async (req, res) => {
+    try {
+        const { user_id, populate } = req.query;
+        if (!user_id) {
+            return res.status(400).json({ message: "No user ID provided" });
+        }
+        let query = Order.find({ user_id }).sort({ dateOrdered: -1 });
+        if (populate === 'productId') {
+            query = query.populate('productId');
+        }
+        const orders = await query;
+        if (orders.length > 0) {
+            res.json(orders);
+        } else {
+            res.status(404).json({ message: "No orders found for this user!" });
+        }
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ message: "Server Error" });
     }
 };
 

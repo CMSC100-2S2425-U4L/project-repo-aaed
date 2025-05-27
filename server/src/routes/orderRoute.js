@@ -27,23 +27,22 @@
 // } 
 // from '../controllers/orderController.js';
 import express from 'express';
+import {
+    saveOrder,
+    updateOrderStatus,
+    getAllOrders,
+    getOrdersByUser
+} from '../controllers/orderController.js';
 
 const router = express.Router();
- 
+
 // Create new order
 router.post("/add", saveOrder);
-
-// Get order by ID
-router.get("/:id", getOrder);
-
-// Get orders by email 
-router.get("/", (req, res, next) => {
-    if (req.query.email) {
-        return getOrdersByEmail(req, res, next);
-    }
-    return getAllOrders(req, res, next);
-});
-
+// Get orders by user ID (not email)
+router.get("/user", getOrdersByUser);
+// Get all orders (for admin view)
+router.get("/", getAllOrders);
+// Update order status by ID
 router.put("/status/:id", updateOrderStatus);
 
 export default router;

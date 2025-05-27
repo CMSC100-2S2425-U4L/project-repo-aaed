@@ -71,14 +71,20 @@ export const login = async (req, res) => {
         if (!isMatch) {
             return res.status(401).json({ message: "Invalid credentials" });
         }
-        // create JWT token with 1 hr validity
-        const token = jwt.sign(
-            { _id: user._id, userType: user.userType },
-            process.env.JWT_SECRET,
-            { expiresIn: '1h' }
-        );
-        // return token to the client
-        res.json({ token });
+        // create JWT token with 1 hr validity, include only essential user details
+        const token = jwt.sign({
+            _id: user._id,
+            userType: user.userType
+        }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        // return token and user details to the client
+        res.json({
+            token,
+            userType: user.userType,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            _id: user._id
+        });
     } catch (e) {
         res.status(500).json({ message: "Server Error" });
     }
